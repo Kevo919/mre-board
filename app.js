@@ -20,13 +20,14 @@ const FIELD_TYPES = [
 ];
 const BOT_LINK = (id) => `grokbot://app/v1/sidebar?agent=${id}&tab=overview`;
 const DEFAULT_BOTS = [
-  ['14250373-92c8-4cfa-b12a-4d8b58cc0dd5', 'MRE Triage', 'Triage'],
-  ['46c84c93-3489-486b-b331-16ab46f8ff98', 'MRE Leasing & Vacancies', 'Leasing'],
-  ['24dbc830-2ab6-4a64-81f8-ce513aad2c53', 'MRE Maintenance & Work Orders', 'Maintenance'],
-  ['1d1e9dc5-bdb7-411e-b490-7bb403e2d348', 'MRE Vendors', 'Vendors'],
-  ['62cbcc0d-ba22-4956-9857-05551978ce22', 'MRE Bills & Payments', 'Bills'],
-  ['7bffe639-ea47-4063-b8a3-73520f9a3f2a', 'Grok Bot', 'Grok Bot'],
-].map(([id, name, short]) => ({ id, name, short, link: BOT_LINK(id) }));
+  ['14250373-92c8-4cfa-b12a-4d8b58cc0dd5', 'MRE Triage', 'Triage', '#7c3aed'],
+  ['46c84c93-3489-486b-b331-16ab46f8ff98', 'MRE Leasing & Vacancies', 'Leasing', '#ea580c'],
+  ['24dbc830-2ab6-4a64-81f8-ce513aad2c53', 'MRE Maintenance & Work Orders', 'Maintenance', '#0891b2'],
+  ['1d1e9dc5-bdb7-411e-b490-7bb403e2d348', 'MRE Vendors', 'Vendors', '#16a34a'],
+  ['62cbcc0d-ba22-4956-9857-05551978ce22', 'MRE Bills & Payments', 'Bills', '#ca8a04'],
+  ['7bffe639-ea47-4063-b8a3-73520f9a3f2a', 'Grok Bot', 'Grok Bot', '#2563eb'],
+].map(([id, name, short, color]) => ({ id, name, short, color, link: BOT_LINK(id) }));
+const KV_COLOR = '#db2777';
 const PALETTE = ['#2563eb', '#0891b2', '#0d9488', '#16a34a', '#65a30d', '#ca8a04', '#ea580c', '#dc2626', '#db2777', '#9333ea', '#7c3aed', '#64748b'];
 
 /* ---------------- small helpers ---------------- */
@@ -140,7 +141,7 @@ function normWS(ws) {
   for (const k of ['nodes', 'buckets', 'fields', 'savedViews', 'deleted']) if (!Array.isArray(ws[k])) ws[k] = [];
   if (!Array.isArray(ws.people)) ws.people = ['KV'];
   if (!Array.isArray(ws.bots) || !ws.bots.length) ws.bots = DEFAULT_BOTS.map((b) => ({ ...b, updatedAt: ws.updated || nowISO() }));
-  ws.bots.forEach((b) => { if (!b.link) b.link = BOT_LINK(b.id); });
+  ws.bots.forEach((b) => { if (!b.link) b.link = BOT_LINK(b.id); if (!b.color) { const d = DEFAULT_BOTS.find((x) => x.id === b.id); b.color = d ? d.color : '#64748b'; } });
   // v3: "In Progress" buckets are active (animated edge light) unless KV turned it off
   ws.buckets.forEach((b) => { if (b.isActive === undefined) b.isActive = /^in progress$/i.test(b.name); });
   ws.nodes.forEach((n) => { n.archived = !!n.archived; if (n.order == null) n.order = 0; });
@@ -152,7 +153,7 @@ function normItem(x, t) {
   return { id: x.id || uid('i'), nodeId: x.nodeId || null, status: x.status || null, title: x.title || '(untitled)', fields: x.fields && typeof x.fields === 'object' ? JSON.parse(JSON.stringify(x.fields)) : {},
     start: x.start || null, due: x.due || null, checklist: Array.isArray(x.checklist) ? x.checklist : [], comments: Array.isArray(x.comments) ? x.comments : [],
     labels: Array.isArray(x.labels) ? x.labels : [], source: x.source || 'kv', lastEditedBy: x.lastEditedBy || x.source || 'kv',
-    agent: x.agent || null, taskUrl: x.taskUrl || null,
+    agent: x.agent || null, taskUrl: x.taskUrl || null, activity: Array.isArray(x.activity) ? x.activity : [],
     order: typeof x.order === 'number' ? x.order : 0, createdAt: x.createdAt || x.created || t, updatedAt: x.updatedAt || t };
 }
 
@@ -235,7 +236,12 @@ function mergeItemsDocs(l, r) {
   if (!l) return r; if (!r) return l;
   const deleted = [...tombMap([...(l.deleted || []), ...(r.deleted || [])]).values()];
   const tm = tombMap(deleted);
-  return { schemaVersion: SCHEMA, updated: tsNum(l.updated) >= tsNum(r.updated) ? l.updated : r.updated, items: mergeById(l.items, r.items, tm, 'item'), deleted };
+  const items = mergeById(l.items, r.items, tm, 'item');
+  // activity is append-only: keep entries from both sides (dedupe by id) whichever version of the card wins
+  const other = new Map([...(l.items || []), ...(r.items || [])].map((x) => [x.id, []]));
+  for (const x of [...(l.items || []), ...(r.items || [])]) other.get(x.id).push(...(x.activity || []));
+  const out = items.map((x) => { const all = other.get(x.id) || []; if (!all.length) return x; const m = new Map(); for (const e of all) if (e && e.id && !m.has(e.id)) m.set(e.id, e); const act = [...m.values()].sort((a, b) => tsNum(a.ts) - tsNum(b.ts)); return (act.length === (x.activity || []).length) ? x : { ...x, activity: act }; });
+  return { schemaVersion: SCHEMA, updated: tsNum(l.updated) >= tsNum(r.updated) ? l.updated : r.updated, items: out, deleted };
 }
 function mergeWSDocs(l, r) {
   if (!l) return r; if (!r) return l;
@@ -483,11 +489,51 @@ function sortItems(list, sort = UI.sort) {
 function getItem(id) { return IT.items.find((i) => i.id === id); }
 function updateItem(id, patch = {}, fieldPatch = null, { render: doRender = true } = {}) {
   const it = getItem(id); if (!it) return;
+  const before = clone({ status: it.status, nodeId: it.nodeId, due: it.due, start: it.start, title: it.title, agent: it.agent, taskUrl: it.taskUrl, labels: it.labels, checklist: it.checklist, comments: it.comments, fields: it.fields });
   if (patch.nodeId && patch.nodeId !== it.nodeId) { const oldDom = itemDomain(it); Object.assign(it, { nodeId: patch.nodeId }); const nd = itemDomain(it); if (nd !== oldDom && !patch.status) { const ob = bucket(it.status); const nb = bucketsOf(nd).find((b) => ob && b.name.toLowerCase() === ob.name.toLowerCase()) || bucketsOf(nd)[0]; it.status = nb ? nb.id : null; } }
   Object.assign(it, patch);
   if (fieldPatch) for (const [k, v] of Object.entries(fieldPatch)) { if (isEmpty(v) || v === false) delete it.fields[k]; else it.fields[k] = v; }
   it.updatedAt = nowISO(); it.lastEditedBy = 'kv';
+  for (const action of describeChange(before, it, patch, fieldPatch)) logKV(it, action);
   markDirty('items'); if (doRender) render();
+}
+/* ---------------- activity log ---------------- */
+function describeChange(b, it, patch, fp) {
+  const out = [];
+  if ('status' in patch && it.status !== b.status) { const bk = bucket(it.status); out.push('Moved to ' + (bk ? bk.name : 'another bucket')); }
+  else if (it.status !== b.status) { const bk = bucket(it.status); if (bk) out.push('Moved to ' + bk.name); }
+  if ('nodeId' in patch && it.nodeId !== b.nodeId) out.push('Moved to ' + (fullPath(it.nodeId).split(' › ').slice(1).join(' › ') || fullPath(it.nodeId)));
+  if ('due' in patch && it.due !== b.due) out.push(!b.due ? `Added due date ${fmtDate(it.due)}` : !it.due ? 'Removed due date' : `Changed due date to ${fmtDate(it.due)}`);
+  if ('start' in patch && it.start !== b.start) out.push(it.start ? `Set start date ${fmtDate(it.start)}` : 'Removed start date');
+  if ('title' in patch && it.title !== b.title) out.push('Renamed card');
+  if ('agent' in patch && it.agent !== b.agent) out.push('Assigned to ' + ((botOf(it) || {}).name || 'no bot'));
+  if ('taskUrl' in patch && it.taskUrl !== b.taskUrl) out.push(it.taskUrl ? 'Added task link' : 'Removed task link');
+  if ('labels' in patch && JSON.stringify(it.labels) !== JSON.stringify(b.labels)) out.push('Updated labels');
+  if ('checklist' in patch) { const d0 = b.checklist.filter((c) => c.done).length, d1 = it.checklist.filter((c) => c.done).length;
+    out.push(it.checklist.length > b.checklist.length ? 'Added a checklist item' : d1 > d0 ? 'Checked off a checklist item' : it.checklist.length < b.checklist.length ? 'Removed a checklist item' : 'Updated checklist'); }
+  if ('comments' in patch && it.comments.length > b.comments.length) out.push('Added a comment');
+  if (fp) { const names = Object.keys(fp).filter((k) => JSON.stringify(b.fields[k] ?? null) !== JSON.stringify(it.fields[k] ?? null)).map((k) => (fieldDef(k) || { name: k }).name); if (names.length) out.push('Updated ' + names.join(', ')); }
+  return out;
+}
+function logKV(it, action) {
+  const now = nowISO(); it.activity = it.activity || []; const last = it.activity[it.activity.length - 1];
+  if (last && last.actor === 'kv' && last.action === action && tsNum(now) - tsNum(last.ts) < 120000) { last.ts = now; return; } // coalesce quick repeats
+  it.activity.push({ id: uid('a'), ts: now, actor: 'kv', actorName: 'KV', action });
+}
+function actorInfo(e) {
+  if (!e || e.actor === 'kv') return { name: 'KV', short: 'KV', color: KV_COLOR };
+  const b = WS.bots.find((x) => x.id === e.actor); return b ? { name: b.name, short: b.short || b.name, color: b.color || '#64748b' } : { name: e.actorName || 'Bot', short: e.actorName || 'Bot', color: '#64748b' };
+}
+function fmtRel(iso) {
+  const d = (Date.now() - tsNum(iso)) / 1000; if (!tsNum(iso)) return '';
+  if (d < 45) return 'just now'; if (d < 3600) return Math.max(1, Math.round(d / 60)) + 'm ago'; if (d < 86400) return Math.round(d / 3600) + 'h ago';
+  if (d < 86400 * 14) return Math.round(d / 86400) + 'd ago'; return fmtStamp(iso).replace(/,? \d+:\d+.*$/, '');
+}
+const latestActivity = (it) => (it.activity || []).reduce((m, e) => (!m || tsNum(e.ts) >= tsNum(m.ts) ? e : m), null);
+function activityLine(it) {
+  const e = latestActivity(it); if (!e) return null; const a = actorInfo(e);
+  return h('div', { class: 'card-activity', title: `${a.name}: ${e.action} — ${fmtStamp(e.ts)}` },
+    h('span', { class: 'act-chip', style: { '--bc': a.color } }, h('i', { class: 'dot', style: { background: a.color } }), a.short), h('span', { class: 'act-time' }, ' · ' + fmtRel(e.ts)), h('span', { class: 'act-text' }, ' — ' + e.action));
 }
 function createItem(data) {
   const t = nowISO();
@@ -495,6 +541,7 @@ function createItem(data) {
   if (!it.nodeId || !node(it.nodeId)) it.nodeId = defaultNodeId();
   if (!it.agent || !WS.bots.some((b) => b.id === it.agent)) it.agent = defaultAgentId(it);
   if (!it.status || !bucket(it.status) || bucket(it.status).domainId !== itemDomain(it)) it.status = (bucketsOf(itemDomain(it))[0] || {}).id || null;
+  it.activity = [{ id: uid('a'), ts: it.createdAt, actor: 'kv', actorName: 'KV', action: 'Created card' }];
   IT.items.push(it); markDirty('items'); render(); return it;
 }
 function deleteItem(id) { IT.items = IT.items.filter((i) => i.id !== id); IT.deleted = (IT.deleted || []).concat({ id, kind: 'item', at: nowISO() }); markDirty('items'); render(); }
@@ -811,6 +858,7 @@ function cardEl(it) {
     h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner', title: 'Owner' }, it.fields.owner) : null, priorityPill(it),
       cl.length ? h('span', { title: 'Checklist' }, `☑ ${doneN}/${cl.length}`) : null, it.comments.length ? h('span', { title: 'Comments' }, `💬 ${it.comments.length}`) : null,
       it.labels.map((l) => h('span', { class: 'label' }, l))),
+    activityLine(it),
     h('button', { class: 'card-menu', 'aria-label': 'Card actions for ' + it.title, onClick: (e) => { e.stopPropagation(); cardMenu(e.currentTarget, it); } }, '⋯'));
 }
 function cardMenu(anchor, it) {
@@ -1136,14 +1184,15 @@ function renderTimeline(v, items) {
     rows.sort((a, b) => a.s.localeCompare(b.s) || a.e.localeCompare(b.e)).forEach(({ it, s, e }) => {
       const di = dueInfo(it);
       tl.append(h('div', { class: 'tl-row' }, h('div', { class: 'tl-label', title: it.title }, it.title), h('div', { class: 'tl-track', style: { width: W + 'px' } },
-        h('button', { class: 'tl-bar' + (isDone(it) ? ' done' : '') + (di && di.cls === 'overdue' ? ' overdue' : ''), style: { left: x(s) + 'px', width: Math.max(dw, x(e) - x(s) + dw) + 'px', '--pc': nodeColor(it.nodeId) }, title: `${it.title}: ${fmtDate(s)} → ${fmtDate(e)}`, 'aria-label': `${it.title}, ${fmtDate(s)} to ${fmtDate(e)}`, onClick: () => openCard(it.id) }, it.title))));
+        h('button', { class: 'tl-bar' + (isDone(it) ? ' done' : '') + (di && di.cls === 'overdue' ? ' overdue' : ''), style: { left: x(s) + 'px', width: Math.max(dw, x(e) - x(s) + dw) + 'px', '--pc': nodeColor(it.nodeId) }, title: `${it.title}: ${fmtDate(s)} → ${fmtDate(e)}`, 'aria-label': `${it.title}, ${fmtDate(s)} to ${fmtDate(e)}`, onClick: () => openCard(it.id) }, it.title),
+        (it.activity || []).map((a) => { const d = dateOnly(a.ts); if (!d || d < min || d > max) return null; const ai = actorInfo(a); return h('span', { class: 'tl-tick', style: { left: x(d) + dw / 2 + 'px', '--bc': ai.color }, title: `${ai.short}: ${a.action} — ${fmtStamp(a.ts)}` }); }))));
     });
   }
   tl.append(h('div', { class: 'tl-today', style: { left: lw + x(t0) + dw / 2 + 'px' }, 'aria-hidden': 'true' }));
   const wrap = h('div', { class: 'tl-wrap' }, tl);
   v.append(spans.length ? wrap : h('div', { class: 'empty' }, 'No cards with due dates in this view.'));
   const nd = items.length - withDue.length;
-  v.append(h('p', { class: 'tl-note' }, `Bars run from Start (or the created date) to Due. Red line = today.${nd ? ` ${nd} card(s) without a due date aren't shown.` : ''}`));
+  v.append(h('p', { class: 'tl-note' }, `Bars run from Start (or the created date) to Due. Dots under a bar = activity. Red line = today.${nd ? ` ${nd} card(s) without a due date aren't shown.` : ''}`));
   requestAnimationFrame(() => { if (TL_SCROLL.set) return; wrap.scrollLeft = Math.max(0, x(t0) - dw * 5); TL_SCROLL.set = true; });
 }
 const TL_SCROLL = { set: false };
@@ -1157,7 +1206,7 @@ function renderGallery(v, items) {
       h('div', { class: 'gtitle' }, it.title), pathLabel(it.nodeId) ? h('div', { class: 'kv' }, pathLabel(it.nodeId)) : null,
       it.fields.notes ? h('div', { class: 'card-note' }, it.fields.notes) : null,
       h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner' }, it.fields.owner) : null, priorityPill(it), it.checklist.length ? h('span', null, `☑ ${it.checklist.filter((c) => c.done).length}/${it.checklist.length}`) : null),
-      flds.filter((f) => !isEmpty(it.fields[f.id])).slice(0, 4).map((f) => h('div', { class: 'kv' }, f.name + ': ', h('b', null, fmtFieldVal(f, it.fields[f.id]))))))))
+      flds.filter((f) => !isEmpty(it.fields[f.id])).slice(0, 4).map((f) => h('div', { class: 'kv' }, f.name + ': ', h('b', null, fmtFieldVal(f, it.fields[f.id])))), activityLine(it)))))
     : h('div', { class: 'empty' }, 'No cards match.'));
   v.append(h('div', { style: { 'margin-top': '12px' } }, h('button', { class: 'btn', onClick: () => openCard(null, {}) }, '＋ Add card')));
 }
@@ -1198,10 +1247,19 @@ function openCard(id, presets = {}) {
   if (draft) { for (const k of Object.keys(draft.fields)) if (isEmpty(draft.fields[k])) delete draft.fields[k]; if (!draft.fields.owner && WS.people.includes('KV')) draft.fields.owner = 'KV'; if (!draft.agent) draft.agent = defaultAgentId(draft); }
   const cur = () => existing ? getItem(id) : draft;
   const set = (patch, fp) => {
-    if (existing) { updateItem(id, patch, fp); }
+    if (existing) { updateItem(id, patch, fp); const box = md && $('#cm-activity', md.body), it = cur(); if (box && it) box.replaceWith(activitySection(it)); }
     else { Object.assign(draft, patch); if (fp) for (const [k, v] of Object.entries(fp)) { if (isEmpty(v) || v === false) delete draft.fields[k]; else draft.fields[k] = v; } }
   };
-  let md;
+  let md; let showAllAct = false;
+  const activitySection = (it) => {
+    const all = (it.activity || []).map((e, i) => [e, i]).sort((a, b) => tsNum(b[0].ts) - tsNum(a[0].ts) || b[1] - a[1]).map((x) => x[0]); const shown = showAllAct ? all : all.slice(0, 3);
+    return h('div', { class: 'fld full activity', id: 'cm-activity' }, h('span', null, `Activity (${all.length})`),
+      all.length ? h('ol', { class: 'act-list', 'aria-label': 'Activity, newest first' }, shown.map((e) => { const a = actorInfo(e);
+        return h('li', { class: 'act-item', style: { '--bc': a.color } }, h('i', { class: 'act-dot', 'aria-hidden': 'true' }),
+          h('div', null, h('div', null, h('b', { class: 'act-name' }, a.name), ' ', e.action), h('time', { datetime: e.ts, class: 'meta-line' }, fmtStamp(e.ts) + ' · ' + fmtRel(e.ts)))); }))
+        : h('div', { class: 'meta-line' }, 'No activity yet.'),
+      all.length > 3 ? h('button', { class: 'btn small', type: 'button', id: 'cm-act-toggle', 'aria-expanded': String(showAllAct), 'aria-controls': 'cm-activity', onClick: () => { showAllAct = !showAllAct; rebuild('#cm-act-toggle'); } }, showAllAct ? 'Show less' : `Show all (${all.length})`) : null);
+  };
   const build = () => {
     const it = cur(); if (!it) { md && md.close(); return; }
     const dom = domainOf(it.nodeId); const domId = dom ? dom.id : domains()[0].id; const bs = bucketsOf(domId);
@@ -1247,6 +1305,7 @@ function openCard(id, presets = {}) {
         h('div', { class: 'fld full' }, h('span', null, `Checklist ${it.checklist.length ? `(${it.checklist.filter((c) => c.done).length}/${it.checklist.length})` : ''}`), cl, h('div', { class: 'rule' }, clAdd, h('button', { class: 'btn small', type: 'button', onClick: addCl }, 'Add'))),
         h('div', { class: 'fld full' }, h('span', null, `Comments (${it.comments.length})`), it.comments.map((c) => h('div', { class: 'comment' }, h('small', null, fmtStamp(c.at) + (c.by ? ' · ' + c.by : '')), c.text)), cmIn,
           h('div', null, h('button', { class: 'btn small', type: 'button', id: 'cm-comment-btn', onClick: () => { if (!cmIn.value.trim()) return; privacyWarn(cmIn.value); set({ comments: [...cur().comments, { text: cmIn.value.trim(), at: nowISO(), by: 'KV' }] }); rebuild('#cm-comment'); } }, 'Comment'))),
+        activitySection(it),
         existing ? h('div', { class: 'meta-line full' }, `Source: ${it.source} · Created ${fmtStamp(it.createdAt)} · Updated ${fmtStamp(it.updatedAt)} · id ${it.id}`) : null));
     return body;
   };
@@ -1404,7 +1463,7 @@ async function init() {
     saveMeta();
   } else if (!WS) { const m = migrate(null, null); WS = m.ws; IT = m.items; toast('Could not load board data; starting empty.'); }
   reindex(); saveLocal(); render(); scheduleSync(1000);
-  window.MRE = { get ws() { return WS; }, get items() { return IT; }, migrate, mergeItemsDocs, mergeWSDocs, render, setSync, get sync() { return { ...SYNC, meta: META }; } };
+  window.MRE = { get ws() { return WS; }, get items() { return IT; }, migrate, mergeItemsDocs, updateItem, mergeWSDocs, render, setSync, get sync() { return { ...SYNC, meta: META }; } };
 }
 init();
 })();
