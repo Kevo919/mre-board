@@ -584,11 +584,14 @@ table.grid{border-collapse:separate;border-spacing:0;min-width:100%;font-size:14
 .ideas-plus{font-size:16px;color:var(--accent)}
 .col.col-ideas:not(.collapsed){flex:0 1 250px;min-width:220px}
 @media (max-width: 860px){ .col.col-ideas.collapsed{flex:0 0 46px;scroll-snap-align:start} .col.col-ideas:not(.collapsed){flex:0 0 78%} }
-/* Calendar Bills chip */
+/* Calendar All cards | Bills */
 .cal-head{flex-wrap:wrap}
-.cal-bills .at-ico,.cal-pill .at-ico{display:inline-flex;width:13px;height:13px;vertical-align:-2px;margin-right:3px}.cal-bills .at-ico svg,.cal-pill .at-ico svg{width:13px;height:13px}
-.cal-bills .at-chip-ico{color:#ca8a04}
-.cal-pill.bill{background:color-mix(in srgb,var(--pc) 16%,var(--panel));color:var(--text);border:1px solid color-mix(in srgb,var(--pc) 55%,transparent)}
-.cal .dots .bill-dot{background:none!important;width:auto;height:auto;color:var(--pc)}
+.cal-mode .at-ico,.cal-pill .at-ico{display:inline-flex;width:13px;height:13px;vertical-align:-2px;margin-right:4px}.cal-mode .at-ico svg,.cal-pill .at-ico svg{width:13px;height:13px}
+.cal-mode .cal-bills .at-ico{color:#ca8a04}.cal-mode .cal-bills[aria-pressed="true"]{background:#ca8a04;border-color:#ca8a04;color:#fff}.cal-mode .cal-bills[aria-pressed="true"] .at-ico{color:#fff}
+.cal-pill.bill{background:color-mix(in srgb,#ca8a04 15%,var(--panel));color:var(--text);border:1px solid color-mix(in srgb,#ca8a04 60%,transparent);border-left:3px solid #ca8a04}
+.cal-pill.bill .at-ico{color:#ca8a04}
+.cal-pill.bill.urgent{border-color:color-mix(in srgb,#dc2626 55%,transparent);border-left-color:#dc2626;background:color-mix(in srgb,#dc2626 10%,var(--panel))}
+.cal-pill.bill.urgent .at-ico{color:#dc2626}
+.cal.mini .dots i.bill-dot{width:auto;height:auto;background:none;border-radius:0;color:#ca8a04}
+.cal.mini .dots i.bill-dot.urgent{color:#dc2626}
 .cal .dots .bill-dot .at-ico{width:11px;height:11px;margin:0}.cal .dots .bill-dot .at-ico svg{width:11px;height:11px}
-.cal.mini .dots i.bill-dot{width:auto;height:auto;background:none;border-radius:0;color:var(--pc)}
