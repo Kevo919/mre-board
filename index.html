@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111418" media="(prefers-color-scheme: dark)">
+<title>MRE Work Board</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#view">Skip to board</a>
+<div class="app">
+  <aside id="sidebar" class="sidebar" aria-label="Workspace navigation">
+    <div class="sb-head">
+      <span class="logo" aria-hidden="true">MRE</span>
+      <strong>Workspace</strong>
+      <button class="icon-btn sb-close" id="sbClose" aria-label="Close navigation">✕</button>
+    </div>
+    <nav id="tree" class="tree"></nav>
+    <div class="sb-foot">
+      <button class="btn small" id="addDomainBtn">+ Domain</button>
+      <button class="btn small" id="manageBtn">Manage</button>
+      <label class="small-check"><input type="checkbox" id="showArchived"> Show archived</label>
+    </div>
+  </aside>
+  <div id="scrim" class="scrim" hidden></div>
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation" aria-controls="sidebar">☰</button>
+      <div class="title-wrap">
+        <h1>MRE Work Board</h1>
+        <div class="scope-label" id="scopeLabel">All</div>
+      </div>
+      <span id="syncStatus" class="sync" role="status" aria-live="polite"></span>
+      <button class="btn primary" id="addCardBtn" aria-label="Add card"><span aria-hidden="true">＋</span><span class="hide-sm"> Add card</span></button>
+      <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙</button>
+    </header>
+    <nav id="viewTabs" class="tabs" role="tablist" aria-label="Views"></nav>
+    <div class="toolbar" id="toolbar"></div>
+    <div class="chips" id="chips" role="group" aria-label="Quick filters"></div>
+    <div id="filterPanel" class="filter-panel" hidden></div>
+    <section id="view" class="view" tabindex="-1" aria-live="polite"></section>
+    <footer class="foot" id="foot"></footer>
+  </main>
+</div>
+<div id="modalRoot"></div>
+<div id="menuRoot"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
