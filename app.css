@@ -137,7 +137,7 @@ table.grid{border-collapse:separate;border-spacing:0;min-width:100%;font-size:14
 .grid td .cell.ro{cursor:default;color:var(--muted)}
 .grid td input,.grid td select,.grid td textarea{width:100%;border:2px solid var(--accent);border-radius:0;padding:5px 8px;min-width:140px}
 .grid tr:hover td{background:color-mix(in srgb,var(--panel2) 60%,var(--panel))}
-.grid td.c-title{position:relative}
+.grid td.c-title{position:sticky;background:var(--panel)} /* sticky first column (was overridden to relative) */
 .grid td.c-title .cell{padding-right:30px}
 .open-btn{position:absolute;right:2px;top:4px;border:0;background:none;color:var(--muted);font-size:14px;width:26px;height:26px;border-radius:6px}
 .open-btn:hover{background:var(--panel2);color:var(--accent)}
