@@ -354,3 +354,26 @@ table.grid{border-collapse:separate;border-spacing:0;min-width:100%;font-size:14
 .act-item time { display: block; }
 .tl-tick { position: absolute; top: 29px; width: 5px; height: 5px; border-radius: 50%; background: var(--bc); transform: translateX(-2px); z-index: 2; pointer-events: auto; box-shadow: 0 0 0 1.5px var(--panel); }
 #cm-act-toggle { align-self: flex-start; justify-self: start; }
+
+/* ---------- Action type (built-in multi-select field) ---------- */
+.at-ico { display: inline-flex; width: 13px; height: 13px; flex: 0 0 13px; }
+.at-ico svg { width: 100%; height: 100%; display: block; }
+.at-chips { display: inline-flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.at-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 6px; border-radius: 99px; font-size: 12px; font-weight: 600; line-height: 18px;
+  color: color-mix(in srgb, var(--atc) 85%, var(--text)); background: color-mix(in srgb, var(--atc) 13%, var(--panel)); border: 1px solid color-mix(in srgb, var(--atc) 35%, transparent); white-space: nowrap; }
+.grid .at-chip { font-size: 11.5px; }
+.chip .at-chip-ico { display: inline-flex; }
+.chip[aria-pressed="true"] .at-chip-ico { color: #fff !important; }
+.chips .chip .at-ico { width: 15px; height: 15px; flex-basis: 15px; }
+.chip[data-opt][aria-pressed="true"] .at-ico { color: #fff; }
+
+/* ---------- View tabs: default (Start in) + tab menu ---------- */
+.def-star { font-size: 10px; color: var(--accent); margin-left: -2px; }
+.tab-more { border: 0; background: none; color: var(--muted); padding: 4px 6px; margin: 6px 4px 8px -8px; border-radius: 6px; font-size: 12px; align-self: center; }
+.tab-more:hover, .tab-more:focus-visible { background: var(--hover, rgba(0,0,0,.06)); color: var(--text); }
+@media (max-width: 860px) {
+  .tab-more { display: none; }
+  .tab { position: relative; }
+  .tab .def-star { position: absolute; top: 4px; right: calc(50% - 20px); margin: 0; font-size: 9px; }
+  .tab .tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+}
