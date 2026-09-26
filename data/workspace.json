@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 2,
+  "name": "MRE Work Board",
+  "updated": "2026-09-26T15:00:00-05:00",
+  "nodes": [
+    {
+      "id": "d-re",
+      "parentId": null,
+      "type": "domain",
+      "name": "Real Estate",
+      "color": "#2563eb",
+      "order": 0,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "d-home",
+      "parentId": null,
+      "type": "domain",
+      "name": "Home",
+      "color": "#0d9488",
+      "order": 1,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "d-personal",
+      "parentId": null,
+      "type": "domain",
+      "name": "Personal",
+      "color": "#9333ea",
+      "order": 2,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-echo",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "Echo (Aurora)",
+      "color": "#0891b2",
+      "order": 3,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-tasks",
+      "parentId": "g-echo",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 4,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-units",
+      "parentId": "g-echo",
+      "type": "section",
+      "name": "Units",
+      "color": null,
+      "order": 5,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-unit-a",
+      "parentId": "s-echo-units",
+      "type": "section",
+      "name": "Unit A",
+      "color": null,
+      "order": 6,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-unit-b",
+      "parentId": "s-echo-units",
+      "type": "section",
+      "name": "Unit B",
+      "color": null,
+      "order": 7,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-vendors",
+      "parentId": "g-echo",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 8,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-bills",
+      "parentId": "g-echo",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 9,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-echo-leasing",
+      "parentId": "g-echo",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 10,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-plum",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "Plum (Aurora)",
+      "color": "#7c3aed",
+      "order": 11,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-plum-tasks",
+      "parentId": "g-plum",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 12,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-plum-units",
+      "parentId": "g-plum",
+      "type": "section",
+      "name": "Units",
+      "color": null,
+      "order": 13,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-plum-vendors",
+      "parentId": "g-plum",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 14,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-plum-bills",
+      "parentId": "g-plum",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 15,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-plum-leasing",
+      "parentId": "g-plum",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 16,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-college",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "College (Crystal Lake)",
+      "color": "#16a34a",
+      "order": 17,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-college-tasks",
+      "parentId": "g-college",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 18,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-college-units",
+      "parentId": "g-college",
+      "type": "section",
+      "name": "Units",
+      "color": null,
+      "order": 19,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-college-vendors",
+      "parentId": "g-college",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 20,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-college-bills",
+      "parentId": "g-college",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 21,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-college-leasing",
+      "parentId": "g-college",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 22,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-crown",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "Crown Point (IN)",
+      "color": "#ea580c",
+      "order": 23,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-crown-tasks",
+      "parentId": "g-crown",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 24,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-crown-units",
+      "parentId": "g-crown",
+      "type": "section",
+      "name": "Units",
+      "color": null,
+      "order": 25,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-crown-vendors",
+      "parentId": "g-crown",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 26,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-crown-bills",
+      "parentId": "g-crown",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 27,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-crown-leasing",
+      "parentId": "g-crown",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 28,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-mohawk",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "Mohawk (Park Forest)",
+      "color": "#db2777",
+      "order": 29,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-mohawk-tasks",
+      "parentId": "g-mohawk",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 30,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-mohawk-units",
+      "parentId": "g-mohawk",
+      "type": "section",
+      "name": "Units",
+      "color": null,
+      "order": 31,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-mohawk-vendors",
+      "parentId": "g-mohawk",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 32,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-mohawk-bills",
+      "parentId": "g-mohawk",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 33,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-mohawk-leasing",
+      "parentId": "g-mohawk",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 34,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "g-general",
+      "parentId": "d-re",
+      "type": "group",
+      "name": "General",
+      "color": "#64748b",
+      "order": 35,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-general-tasks",
+      "parentId": "g-general",
+      "type": "section",
+      "name": "Tasks",
+      "color": null,
+      "order": 36,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-general-vendors",
+      "parentId": "g-general",
+      "type": "section",
+      "name": "Vendors",
+      "color": null,
+      "order": 37,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-general-bills",
+      "parentId": "g-general",
+      "type": "section",
+      "name": "Bills",
+      "color": null,
+      "order": 38,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "s-general-leasing",
+      "parentId": "g-general",
+      "type": "section",
+      "name": "Leasing",
+      "color": null,
+      "order": 39,
+      "archived": false,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    }
+  ],
+  "buckets": [
+    {
+      "id": "b-re-todo",
+      "domainId": "d-re",
+      "name": "To Do",
+      "color": "#64748b",
+      "isDone": false,
+      "order": 0,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-re-inprogress",
+      "domainId": "d-re",
+      "name": "In Progress",
+      "color": "#2563eb",
+      "isDone": false,
+      "order": 1,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-re-review",
+      "domainId": "d-re",
+      "name": "In Review",
+      "color": "#d97706",
+      "isDone": false,
+      "order": 2,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-re-done",
+      "domainId": "d-re",
+      "name": "Done",
+      "color": "#16a34a",
+      "isDone": true,
+      "order": 3,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-home-todo",
+      "domainId": "d-home",
+      "name": "To Do",
+      "color": "#64748b",
+      "isDone": false,
+      "order": 0,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-home-inprogress",
+      "domainId": "d-home",
+      "name": "In Progress",
+      "color": "#2563eb",
+      "isDone": false,
+      "order": 1,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-home-review",
+      "domainId": "d-home",
+      "name": "In Review",
+      "color": "#d97706",
+      "isDone": false,
+      "order": 2,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-home-done",
+      "domainId": "d-home",
+      "name": "Done",
+      "color": "#16a34a",
+      "isDone": true,
+      "order": 3,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-personal-todo",
+      "domainId": "d-personal",
+      "name": "To Do",
+      "color": "#64748b",
+      "isDone": false,
+      "order": 0,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-personal-inprogress",
+      "domainId": "d-personal",
+      "name": "In Progress",
+      "color": "#2563eb",
+      "isDone": false,
+      "order": 1,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-personal-review",
+      "domainId": "d-personal",
+      "name": "In Review",
+      "color": "#d97706",
+      "isDone": false,
+      "order": 2,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "b-personal-done",
+      "domainId": "d-personal",
+      "name": "Done",
+      "color": "#16a34a",
+      "isDone": true,
+      "order": 3,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    }
+  ],
+  "fields": [
+    {
+      "id": "owner",
+      "domainId": null,
+      "name": "Owner",
+      "type": "person",
+      "order": 0,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "priority",
+      "domainId": null,
+      "name": "Priority",
+      "type": "single-select",
+      "order": 1,
+      "updatedAt": "2026-09-26T15:00:00-05:00",
+      "options": [
+        {
+          "id": "high",
+          "name": "High",
+          "color": "#dc2626"
+        },
+        {
+          "id": "medium",
+          "name": "Medium",
+          "color": "#d97706"
+        },
+        {
+          "id": "low",
+          "name": "Low",
+          "color": "#64748b"
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "domainId": null,
+      "name": "Notes",
+      "type": "long-text",
+      "order": 2,
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    }
+  ],
+  "people": [
+    "KV",
+    "Triage",
+    "Leasing",
+    "Maintenance",
+    "Vendors",
+    "Bills"
+  ],
+  "savedViews": [
+    {
+      "id": "sv-overdue",
+      "name": "Overdue (all)",
+      "view": "grid",
+      "scope": "all",
+      "search": "",
+      "quick": {},
+      "groupBy": "status",
+      "rules": [
+        {
+          "field": "due",
+          "op": "before",
+          "value": "today"
+        },
+        {
+          "field": "status",
+          "op": "noneof",
+          "value": [
+            "done"
+          ]
+        }
+      ],
+      "sort": {
+        "key": "due",
+        "dir": 1
+      },
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    }
+  ],
+  "deleted": []
+}
