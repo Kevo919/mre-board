@@ -4,7 +4,7 @@
 (() => {
 'use strict';
 const TZ = 'America/Chicago';
-const SCHEMA = 2;
+const SCHEMA = 3; // v3: bots map, bucket isActive, item agent/taskUrl
 const LS = { ws: 'mre.ws.v2', items: 'mre.items.v2', ui: 'mre.ui.v2', token: 'mre.gh.token', repo: 'mre.gh.repo', sync: 'mre.sync.v2' };
 const VIEWS = [
   { id: 'kanban', name: 'Kanban', ico: '▥' },
@@ -18,6 +18,15 @@ const FIELD_TYPES = [
   ['text', 'Text'], ['long-text', 'Long text'], ['number', 'Number'], ['date', 'Date'], ['single-select', 'Single select'],
   ['multi-select', 'Multi select'], ['checkbox', 'Checkbox'], ['person', 'Person / owner'], ['url', 'URL'],
 ];
+const BOT_LINK = (id) => `grokbot://app/v1/sidebar?agent=${id}&tab=overview`;
+const DEFAULT_BOTS = [
+  ['14250373-92c8-4cfa-b12a-4d8b58cc0dd5', 'MRE Triage', 'Triage'],
+  ['46c84c93-3489-486b-b331-16ab46f8ff98', 'MRE Leasing & Vacancies', 'Leasing'],
+  ['24dbc830-2ab6-4a64-81f8-ce513aad2c53', 'MRE Maintenance & Work Orders', 'Maintenance'],
+  ['1d1e9dc5-bdb7-411e-b490-7bb403e2d348', 'MRE Vendors', 'Vendors'],
+  ['62cbcc0d-ba22-4956-9857-05551978ce22', 'MRE Bills & Payments', 'Bills'],
+  ['7bffe639-ea47-4063-b8a3-73520f9a3f2a', 'Grok Bot', 'Grok Bot'],
+].map(([id, name, short]) => ({ id, name, short, link: BOT_LINK(id) }));
 const PALETTE = ['#2563eb', '#0891b2', '#0d9488', '#16a34a', '#65a30d', '#ca8a04', '#ea580c', '#dc2626', '#db2777', '#9333ea', '#7c3aed', '#64748b'];
 
 /* ---------------- small helpers ---------------- */
@@ -77,7 +86,7 @@ if (QS.get('view') && VIEWS.some((v) => v.id === QS.get('view'))) UI.view = QS.g
 function defaultBuckets(domainId, t) {
   const k = domainId.replace(/^d-/, '');
   return [['todo', 'To Do', '#64748b', false], ['inprogress', 'In Progress', '#2563eb', false], ['review', 'In Review', '#d97706', false], ['done', 'Done', '#16a34a', true]]
-    .map(([id, name, color, isDone], i) => ({ id: `b-${k}-${id}-${Math.random().toString(36).slice(2, 5)}`, domainId, name, color, isDone, order: i, updatedAt: t }));
+    .map(([id, name, color, isDone], i) => ({ id: `b-${k}-${id}-${Math.random().toString(36).slice(2, 5)}`, domainId, name, color, isDone, isActive: id === 'inprogress', order: i, updatedAt: t }));
 }
 function emptyWorkspace() {
   const t = nowISO();
@@ -114,12 +123,15 @@ function migrate(wsIn, itIn) {
       return normItem({ id: c.id || uid('i'), nodeId: node.id, status: b && b.id, title: c.title, due: c.due || null, fields: { owner: c.owner || undefined, notes: c.note || undefined },
         source: c.source || (c.owner && c.owner !== 'KV' ? c.owner : 'kv'), order: i, createdAt: c.created || t, updatedAt: c.updatedAt || t }, t);
     });
-    return { ws: normWS(base), items: { schemaVersion: SCHEMA, updated: t, items, deleted: [] } };
+    const nws = normWS(base); items.forEach((x) => { if (!x.agent) x.agent = defaultAgentId(x, nws); });
+    return { ws: nws, items: { schemaVersion: SCHEMA, updated: t, items, deleted: [] } };
   }
   ws = normWS(ws || emptyWorkspace());
   it = it || { items: [] };
   const t = it.updated || nowISO();
+  const oldVer = it.schemaVersion || 1;
   it = { schemaVersion: SCHEMA, updated: t, items: (it.items || []).map((x) => normItem(x, t)), deleted: it.deleted || [] };
+  if (oldVer < 3) it.items.forEach((x) => { if (!x.agent) x.agent = defaultAgentId(x, ws); }); // v2 → v3
   // future: if (ws.schemaVersion < 3) {...}
   return { ws, items: it };
 }
@@ -127,6 +139,10 @@ function normWS(ws) {
   ws.schemaVersion = SCHEMA;
   for (const k of ['nodes', 'buckets', 'fields', 'savedViews', 'deleted']) if (!Array.isArray(ws[k])) ws[k] = [];
   if (!Array.isArray(ws.people)) ws.people = ['KV'];
+  if (!Array.isArray(ws.bots) || !ws.bots.length) ws.bots = DEFAULT_BOTS.map((b) => ({ ...b, updatedAt: ws.updated || nowISO() }));
+  ws.bots.forEach((b) => { if (!b.link) b.link = BOT_LINK(b.id); });
+  // v3: "In Progress" buckets are active (animated edge light) unless KV turned it off
+  ws.buckets.forEach((b) => { if (b.isActive === undefined) b.isActive = /^in progress$/i.test(b.name); });
   ws.nodes.forEach((n) => { n.archived = !!n.archived; if (n.order == null) n.order = 0; });
   // every domain needs at least one bucket
   ws.nodes.filter((n) => n.type === 'domain').forEach((d) => { if (!ws.buckets.some((b) => b.domainId === d.id)) ws.buckets.push(...defaultBuckets(d.id, ws.updated || nowISO())); });
@@ -136,6 +152,7 @@ function normItem(x, t) {
   return { id: x.id || uid('i'), nodeId: x.nodeId || null, status: x.status || null, title: x.title || '(untitled)', fields: x.fields && typeof x.fields === 'object' ? JSON.parse(JSON.stringify(x.fields)) : {},
     start: x.start || null, due: x.due || null, checklist: Array.isArray(x.checklist) ? x.checklist : [], comments: Array.isArray(x.comments) ? x.comments : [],
     labels: Array.isArray(x.labels) ? x.labels : [], source: x.source || 'kv', lastEditedBy: x.lastEditedBy || x.source || 'kv',
+    agent: x.agent || null, taskUrl: x.taskUrl || null,
     order: typeof x.order === 'number' ? x.order : 0, createdAt: x.createdAt || x.created || t, updatedAt: x.updatedAt || t };
 }
 
@@ -187,6 +204,23 @@ function fmtFieldVal(f, v) {
     default: return String(v);
   }
 }
+/* ---------------- bots (agent links) ---------------- */
+function defaultAgentId(it, ws = WS) {
+  const bots = (ws && ws.bots && ws.bots.length) ? ws.bots : DEFAULT_BOTS;
+  const byShort = (s) => bots.find((b) => b.short && s && b.short.toLowerCase() === String(s).toLowerCase());
+  const b = byShort(it.source) || byShort(it.fields && it.fields.owner) || byShort('Triage') || bots[0];
+  return b ? b.id : null;
+}
+function botOf(it) { return it && it.agent ? WS.bots.find((b) => b.id === it.agent) || null : null; }
+function validTaskUrl(u) { return typeof u === 'string' && /^https?:\/\/[^\s]+$/i.test(u.trim()); }
+function cardLink(it) { if (validTaskUrl(it.taskUrl)) return it.taskUrl.trim(); const b = botOf(it); return b ? b.link || BOT_LINK(b.id) : null; }
+function isActiveItem(it) { const b = itemBucket(it); return !!(b && b.isActive && !b.isDone); }
+function botChip(it) {
+  const b = botOf(it); const href = cardLink(it); if (!b || !href) return null;
+  const tip = validTaskUrl(it.taskUrl) ? `Open task link (${b.name})` : `Open in ${b.name} — Grok Bot app`;
+  return h('a', { class: 'bot-chip', href, 'data-tip': tip, 'aria-label': tip, dataset: { agent: b.id }, onClick: (e) => e.stopPropagation(), onPointerdown: (e) => e.stopPropagation(), onKeydown: (e) => e.stopPropagation() },
+    h('span', { 'aria-hidden': 'true' }, '🤖'), b.short || b.name);
+}
 function statusOptionsUnion(domIds) { const seen = new Map(); for (const d of domIds) for (const b of bucketsOf(d)) { const k = b.name.toLowerCase(); if (!seen.has(k)) seen.set(k, b); } return [...seen.entries()].map(([k, b]) => ({ id: k, name: b.name, color: b.color })); }
 
 /* ---------------- merge (same rules as merge.js) ---------------- */
@@ -210,7 +244,7 @@ function mergeWSDocs(l, r) {
   const people = [...new Set([...(newer.people || []), ...(l.people || []), ...(r.people || [])])].filter((p) => !tm.has('person:' + p) || (newer.people || []).includes(p));
   return normWS({ ...newer, schemaVersion: SCHEMA, updated: newer.updated, deleted, people,
     nodes: mergeById(l.nodes, r.nodes, tm, 'node'), buckets: mergeById(l.buckets, r.buckets, tm, 'bucket'),
-    fields: mergeById(l.fields, r.fields, tm, 'field'), savedViews: mergeById(l.savedViews, r.savedViews, tm, 'view') });
+    fields: mergeById(l.fields, r.fields, tm, 'field'), savedViews: mergeById(l.savedViews, r.savedViews, tm, 'view'), bots: mergeById(l.bots, r.bots, tm, 'bot') });
 }
 
 /* ---------------- persistence & GitHub sync ---------------- */
@@ -342,6 +376,7 @@ function filterFieldDefs(domIds = scopeDomains()) {
     { key: 'due', label: 'Due', type: 'date' },
     { key: 'start', label: 'Start', type: 'date' },
     ...fieldsFor(domIds).map((f) => ({ key: 'f:' + f.id, label: f.name, type: mapType(f.type), options: fieldOptions(f), field: f })),
+    { key: 'agent', label: 'Bot', type: 'select', options: WS.bots.map((b) => ({ id: b.id, name: b.name })) },
     { key: 'labels', label: 'Labels', type: 'multi', options: [...new Set(IT.items.flatMap((i) => i.labels))].map((l) => ({ id: l, name: l })) },
     { key: 'source', label: 'Source', type: 'select', options: [...new Set(['kv', ...WS.people, ...IT.items.map((i) => i.source)])].map((s) => ({ id: s, name: s })) },
     { key: 'createdAt', label: 'Created', type: 'date' },
@@ -359,6 +394,7 @@ function getVal(it, key) {
     case 'due': return it.due || '';
     case 'start': return it.start || '';
     case 'labels': return it.labels;
+    case 'agent': return it.agent || '';
     case 'source': return it.source;
     case 'createdAt': return dateOnly(it.createdAt) || '';
     case 'updatedAt': return dateOnly(it.updatedAt) || '';
@@ -401,7 +437,8 @@ function testRule(it, r, defs) {
 }
 function searchText(it) {
   const f = it.fields || {}; const vals = Object.entries(f).map(([k, v]) => { const d = fieldDef(k); return d ? fmtFieldVal(d, v) : String(v); });
-  return [it.title, ...vals, ...it.labels, fullPath(it.nodeId), ...it.checklist.map((c) => c.text), ...it.comments.map((c) => c.text)].join(' ').toLowerCase();
+  const bot = botOf(it);
+  return [it.title, ...vals, ...it.labels, fullPath(it.nodeId), bot ? bot.name : '', ...it.checklist.map((c) => c.text), ...it.comments.map((c) => c.text)].join(' ').toLowerCase();
 }
 function scopedItems() {
   const scoped = UI.scope !== 'all' && node(UI.scope) ? subtree(UI.scope) : null;
@@ -456,6 +493,7 @@ function createItem(data) {
   const t = nowISO();
   const it = normItem({ ...data, id: uid('kv'), source: 'kv', lastEditedBy: 'kv', createdAt: t, updatedAt: t, order: Math.max(0, ...IT.items.map((i) => i.order || 0)) + 1 }, t);
   if (!it.nodeId || !node(it.nodeId)) it.nodeId = defaultNodeId();
+  if (!it.agent || !WS.bots.some((b) => b.id === it.agent)) it.agent = defaultAgentId(it);
   if (!it.status || !bucket(it.status) || bucket(it.status).domainId !== itemDomain(it)) it.status = (bucketsOf(itemDomain(it))[0] || {}).id || null;
   IT.items.push(it); markDirty('items'); render(); return it;
 }
@@ -499,7 +537,7 @@ function deleteNode(id) {
   wsChanged(); return true;
 }
 function addBucket(domainId, name, color) {
-  const bs = bucketsOf(domainId); const b = wsTouch({ id: uid('b'), domainId, name: name.trim() || 'New bucket', color: color || PALETTE[bs.length % PALETTE.length], isDone: false, order: bs.length ? Math.max(...bs.map((x) => x.order)) + 1 : 0 });
+  const bs = bucketsOf(domainId); const b = wsTouch({ id: uid('b'), domainId, name: name.trim() || 'New bucket', color: color || PALETTE[bs.length % PALETTE.length], isDone: false, isActive: false, order: bs.length ? Math.max(...bs.map((x) => x.order)) + 1 : 0 });
   WS.buckets.push(b); wsChanged(); return b;
 }
 function updateBucket(id, patch) { const b = bucket(id); Object.assign(b, patch); wsTouch(b); wsChanged(); }
@@ -560,7 +598,7 @@ function openModal({ title, body, foot, cls = '', onClose, labelId }) {
     if (e.key === 'Tab') { const f = $$('button,input,select,textarea,[tabindex="0"]', m).filter((x) => !x.disabled && x.offsetParent); if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
   });
   $('#modalRoot').append(back);
-  setTimeout(() => { const f = $('[autofocus]', m) || $('input,select,textarea', $('.m-body', m)) || $('button', m); if (f) f.focus(); }, 0);
+  setTimeout(() => { if (m.contains(document.activeElement)) return; const f = $('[autofocus]', m) || $('input,select,textarea', $('.m-body', m)) || $('button', m); if (f) f.focus(); }, 0);
   return { close, el: m, body: $('.m-body', m) };
 }
 function formDialog({ title, fields, ok = 'Save', danger }) {
@@ -646,7 +684,7 @@ function renderTabs() {
 }
 function activeFilterCount() { const q = UI.quick; return UI.rules.length + (q.domain ? 1 : 0) + (q.section ? 1 : 0) + (q.status ? 1 : 0) + (q.owner ? 1 : 0) + ((q.groups || []).length ? 1 : 0); }
 function groupByOptions() {
-  const opts = [['status', 'Status'], ['group', 'Property / group'], ['section', 'Section']];
+  const opts = [['status', 'Status'], ['group', 'Property / group'], ['section', 'Section'], ['agent', 'Bot']];
   fieldsFor(scopeDomains()).filter((f) => ['single-select', 'person'].includes(f.type)).forEach((f) => opts.push(['f:' + f.id, f.name]));
   return opts;
 }
@@ -761,14 +799,16 @@ function dueInfo(it) {
 function dueBadge(it) { const i = dueInfo(it); return i ? h('span', { class: 'due ' + i.cls, title: 'Due ' + fmtDate(it.due, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) }, '📅 ' + i.text) : null; }
 function locChip(it) { const g = groupOf(it.nodeId); const d = domainOf(it.nodeId); const n = g || d; return n ? h('span', { class: 'prop', style: { '--pc': n.color || nodeColor(n.id) } }, n.name) : null; }
 function statusPill(it) { const b = itemBucket(it); return b ? h('span', { class: 'pill', style: { '--pc': b.color } }, b.name) : null; }
+function liveDot(it) { const b = itemBucket(it); return isActiveItem(it) ? h('span', { class: 'live-dot', style: { '--ac': b.color }, title: 'Actively being worked on', 'aria-label': 'active' }) : null; }
 function priorityPill(it) { const f = fieldDef('priority'); const v = it.fields.priority; if (!f || !v) return null; return h('span', { class: 'pill', style: { '--pc': optColor(f, v) || '#64748b' } }, optName(f, v)); }
 function cardEl(it) {
   const sec = pathLabel(it.nodeId); const cl = it.checklist; const doneN = cl.filter((c) => c.done).length;
-  return h('article', { class: 'card', tabindex: '0', role: 'button', dataset: { id: it.id }, 'aria-roledescription': 'draggable card', 'aria-label': `${it.title}. ${groupOf(it.nodeId) ? groupOf(it.nodeId).name : ''} ${sec}. ${it.due ? 'Due ' + fmtDate(it.due) : ''}. Press Enter to open, Alt+arrow keys to move.` },
+  const act = isActiveItem(it); const bk = itemBucket(it);
+  return h('article', { class: 'card' + (act ? ' is-active' : ''), style: act ? { '--ac': bk.color } : null, tabindex: '0', dataset: { id: it.id }, 'aria-roledescription': 'draggable card', 'aria-label': `${it.title}. ${groupOf(it.nodeId) ? groupOf(it.nodeId).name : ''} ${sec}. ${it.due ? 'Due ' + fmtDate(it.due) : ''}. Press Enter to open, Alt+arrow keys to move.` },
     h('div', { class: 'card-top' }, locChip(it), sec ? h('span', { class: 'card-sec' }, sec) : null),
     h('div', { class: 'card-title' }, it.title),
     it.fields.notes ? h('div', { class: 'card-note' }, it.fields.notes) : null,
-    h('div', { class: 'card-meta' }, dueBadge(it), it.fields.owner ? h('span', { class: 'owner', title: 'Owner' }, it.fields.owner) : null, priorityPill(it),
+    h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner', title: 'Owner' }, it.fields.owner) : null, priorityPill(it),
       cl.length ? h('span', { title: 'Checklist' }, `☑ ${doneN}/${cl.length}`) : null, it.comments.length ? h('span', { title: 'Comments' }, `💬 ${it.comments.length}`) : null,
       it.labels.map((l) => h('span', { class: 'label' }, l))),
     h('button', { class: 'card-menu', 'aria-label': 'Card actions for ' + it.title, onClick: (e) => { e.stopPropagation(); cardMenu(e.currentTarget, it); } }, '⋯'));
@@ -792,6 +832,7 @@ function colKeyOf(it, gb = UI.groupBy) {
   if (gb === 'status') return statusKey(it);
   if (gb === 'group') { const g = groupOf(it.nodeId); return g ? g.id : ''; }
   if (gb === 'section') return it.nodeId || '';
+  if (gb === 'agent') return it.agent || '';
   if (gb.startsWith('f:')) { const f = fieldDef(gb.slice(2)); const v = it.fields[gb.slice(2)]; if (!f || isEmpty(v)) return ''; const o = fieldOptions(f).find((o) => o.id === v || o.name === v); return o ? o.id : ''; }
   return '';
 }
@@ -805,7 +846,8 @@ function kanbanColumns(items) {
     const used = new Set(items.map((i) => i.nodeId)); const show = ids.length <= 14 ? ids : ids.filter((id) => used.has(id));
     for (const id of used) if (id && node(id) && !show.includes(id)) show.push(id);
     cols = show.map((id) => ({ key: id, name: (groupOf(id) && !(UI.scope !== 'all' && groupOf(UI.scope)) ? groupOf(id).name.replace(/\s*\(.*\)$/, '') + ' › ' : '') + (pathLabel(id) || node(id).name), color: nodeColor(id) }));
-  } else { const f = fieldDef(gb.slice(2)); cols = fieldOptions(f).map((o, i) => ({ key: o.id, name: o.name, color: o.color || PALETTE[i % PALETTE.length] })); }
+  } else if (gb === 'agent') cols = WS.bots.map((b, i) => ({ key: b.id, name: b.short || b.name, color: PALETTE[(i * 2) % PALETTE.length] }));
+  else { const f = fieldDef(gb.slice(2)); cols = fieldOptions(f).map((o, i) => ({ key: o.id, name: o.name, color: o.color || PALETTE[i % PALETTE.length] })); }
   const known = new Set(cols.map((c) => c.key));
   if (items.some((i) => !known.has(colKeyOf(i, gb)))) cols.push({ key: '', name: gb === 'status' ? 'Other status' : 'None', color: '#94a3b8', none: true });
   cols.forEach((c) => (c.items = items.filter((i) => (c.none ? !known.has(colKeyOf(i, gb)) : colKeyOf(i, gb) === c.key)).sort((a, b) => a.order - b.order || tsNum(a.createdAt) - tsNum(b.createdAt))));
@@ -818,6 +860,7 @@ function dropTo(id, key, index) {
   if (gb === 'status') { const b = bucketsOf(itemDomain(it)).find((x) => x.name.toLowerCase() === key); if (!b) { toast(`"${col.name}" isn't a bucket in ${domainOf(it.nodeId).name}`); return; } patch.status = b.id; }
   else if (gb === 'group') { if (groupOf(it.nodeId)?.id !== key) patch.nodeId = defaultNodeIdFor(key); }
   else if (gb === 'section') patch.nodeId = key;
+  else if (gb === 'agent') patch.agent = key || null;
   else fp = { [gb.slice(2)]: key || null };
   updateItem(id, patch, fp);
   requestAnimationFrame(() => { const el = $(`.card[data-id="${CSS.escape(id)}"]`); if (el && DND.keyboard) el.focus(); DND.keyboard = false; });
@@ -826,7 +869,7 @@ function renderKanban(v, items) {
   const { cols, single, gb } = kanbanColumns(items);
   const board = h('div', { class: 'board', role: 'list', 'aria-label': 'Kanban board' });
   cols.forEach((c, ci) => {
-    const presets = gb === 'status' ? (c.bucket ? { status: c.bucket.id } : {}) : gb === 'group' ? { nodeId: c.key && defaultNodeIdFor(c.key) } : gb === 'section' ? { nodeId: c.key } : { fields: { [gb.slice(2)]: c.key } };
+    const presets = gb === 'status' ? (c.bucket ? { status: c.bucket.id } : {}) : gb === 'group' ? { nodeId: c.key && defaultNodeIdFor(c.key) } : gb === 'section' ? { nodeId: c.key } : gb === 'agent' ? { agent: c.key } : { fields: { [gb.slice(2)]: c.key } };
     board.append(h('section', { class: 'col', role: 'listitem', style: { '--cc': c.color }, dataset: { key: c.key }, 'aria-label': `${c.name}, ${c.items.length} cards` },
       h('div', { class: 'col-head' }, h('span', { class: 'dot', style: { background: c.color } }), h('span', null, c.name), h('span', { class: 'count' }, c.items.length),
         c.bucket ? h('button', { class: 'icon-btn', 'aria-label': 'Bucket options for ' + c.name, onClick: (e) => bucketMenu(e.currentTarget, c.bucket) }, '⋯') : null),
@@ -839,8 +882,8 @@ function renderKanban(v, items) {
   enableDnD(board);
 }
 async function bucketDialog(domainId, b) {
-  const r = await formDialog({ title: b ? 'Edit bucket' : 'Add bucket to ' + node(domainId).name, fields: [{ name: 'name', label: 'Name', value: b ? b.name : '', required: true }, { name: 'color', label: 'Color', type: 'color', value: b ? b.color : PALETTE[bucketsOf(domainId).length % PALETTE.length] }, { name: 'isDone', label: 'Counts as done (not overdue)', type: 'checkbox', value: b ? b.isDone : false }], ok: b ? 'Save' : 'Add' });
-  if (!r || !r.name.trim()) return; if (b) updateBucket(b.id, { name: r.name.trim(), color: r.color, isDone: r.isDone }); else { const nb = addBucket(domainId, r.name, r.color); if (r.isDone) updateBucket(nb.id, { isDone: true }); }
+  const r = await formDialog({ title: b ? 'Edit bucket' : 'Add bucket to ' + node(domainId).name, fields: [{ name: 'name', label: 'Name', value: b ? b.name : '', required: true }, { name: 'color', label: 'Color', type: 'color', value: b ? b.color : PALETTE[bucketsOf(domainId).length % PALETTE.length] }, { name: 'isDone', label: 'Counts as done (not overdue)', type: 'checkbox', value: b ? b.isDone : false }, { name: 'isActive', label: 'Active (animated): cards here get the moving edge light', type: 'checkbox', value: b ? !!b.isActive : false }], ok: b ? 'Save' : 'Add' });
+  if (!r || !r.name.trim()) return; if (b) updateBucket(b.id, { name: r.name.trim(), color: r.color, isDone: r.isDone, isActive: r.isActive }); else { const nb = addBucket(domainId, r.name, r.color); if (r.isDone || r.isActive) updateBucket(nb.id, { isDone: r.isDone, isActive: r.isActive }); }
 }
 function bucketMenu(anchor, b) {
   const bs = bucketsOf(b.domainId); const i = bs.indexOf(b);
@@ -921,6 +964,7 @@ function gridCols() {
   return [{ key: 'title', label: 'Title', type: 'text' }, { key: 'status', label: 'Status', type: 'status' }, { key: 'group', label: 'Property', type: 'group' }, { key: 'section', label: 'Section', type: 'section' },
     { key: 'due', label: 'Due', type: 'date' }, { key: 'start', label: 'Start', type: 'date' },
     ...fieldsFor(scopeDomains()).map((f) => ({ key: 'f:' + f.id, label: f.name, type: f.type, field: f })),
+    { key: 'agent', label: 'Bot', type: 'agent' }, { key: 'taskUrl', label: 'Task link', type: 'url' },
     { key: 'labels', label: 'Labels', type: 'labels' }, { key: 'source', label: 'Source', ro: true }, { key: 'updatedAt', label: 'Updated', ro: true }];
 }
 function cellText(it, c) {
@@ -928,11 +972,12 @@ function cellText(it, c) {
     case 'title': return it.title; case 'status': { const b = itemBucket(it); return b ? b.name : ''; }
     case 'group': { const g = groupOf(it.nodeId); return g ? g.name : ''; } case 'section': return pathLabel(it.nodeId);
     case 'due': case 'start': return it[c.key] ? fmtDate(it[c.key], { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    case 'agent': { const b = botOf(it); return b ? b.name : ''; } case 'taskUrl': return it.taskUrl || '';
     case 'labels': return it.labels.join(', '); case 'source': return it.source; case 'updatedAt': return fmtStamp(it.updatedAt).replace(/^\w+, /, '');
     default: return c.field ? fmtFieldVal(c.field, it.fields[c.field.id]) : '';
   }
 }
-const SELECT_COLS = new Set(['status', 'group', 'single-select', 'person', 'checkbox']);
+const SELECT_COLS = new Set(['status', 'group', 'single-select', 'person', 'checkbox', 'agent']);
 function renderGrid(v, items) {
   const cols = gridCols(); const cf = UI.colFilters || (UI.colFilters = {});
   let rows = items.filter((it) => cols.every((c) => { const f = cf[c.key]; if (!f) return true; const t = cellText(it, c).toLowerCase(); return SELECT_COLS.has(c.type) ? t === f.toLowerCase() || (f === '(empty)' && !t) : t.includes(f.toLowerCase()); }));
@@ -950,7 +995,8 @@ function renderGrid(v, items) {
     const td = h('td', { class: 'c-' + c.key.replace('f:', '') + (c.field ? ' c-' + c.field.type : '') });
     const txt = cellText(it, c);
     let content;
-    if (c.key === 'status') { const b = itemBucket(it); content = b ? h('span', { class: 'pill', style: { '--pc': b.color } }, b.name) : ''; }
+    if (c.key === 'status') { const b = itemBucket(it); content = b ? h('span', { class: 'status-wrap' }, h('span', { class: 'pill', style: { '--pc': b.color } }, b.name), liveDot(it)) : ''; }
+    else if (c.key === 'agent') { const b = botOf(it); content = b ? h('span', { class: 'bot-name' }, '🤖 ', b.short || b.name) : ''; }
     else if (c.key === 'group') { content = locChip(it) || ''; }
     else if (c.key === 'due') { content = dueBadge(it) || ''; }
     else if (c.field && c.field.type === 'checkbox') content = it.fields[c.field.id] ? '☑' : '☐';
@@ -977,11 +1023,15 @@ function startEdit(td, it, c) {
     else if (c.key === 'section') { if (val && val !== it.nodeId) updateItem(it.id, { nodeId: val }); else renderView(); }
     else if (c.key === 'due' || c.key === 'start') { if ((val || null) !== it[c.key]) updateItem(it.id, { [c.key]: val || null }); else renderView(); }
     else if (c.key === 'labels') updateItem(it.id, { labels: val.split(',').map((s) => s.trim()).filter(Boolean) });
+    else if (c.key === 'agent') { if ((val || null) !== it.agent) updateItem(it.id, { agent: val || null }); else renderView(); }
+    else if (c.key === 'taskUrl') { const v = val.trim(); if (v && !validTaskUrl(v)) { toast('Task link must start with http:// or https://'); renderView(); } else if ((v || null) !== it.taskUrl) updateItem(it.id, { taskUrl: v || null }); else renderView(); }
     else if (c.field) { const f = c.field; let v = val; if (f.type === 'number') v = val === '' ? null : Number(val); if (JSON.stringify(v ?? null) !== JSON.stringify(it.fields[f.id] ?? null)) updateItem(it.id, {}, { [f.id]: v }); else renderView(); }
     fin();
   };
   const sel = (opts, cur) => h('select', { value: cur ?? '' }, opts.map(([v, l]) => h('option', { value: v }, l)));
   if (c.key === 'status') el = sel(bucketsOf(itemDomain(it)).map((b) => [b.id, b.name]), itemBucket(it)?.id);
+  else if (c.key === 'agent') el = sel([['', '—'], ...WS.bots.map((b) => [b.id, b.name])], it.agent || '');
+  else if (c.key === 'taskUrl') el = h('input', { type: 'url', value: it.taskUrl || '', placeholder: 'https://' });
   else if (c.key === 'group') el = sel([['', '—'], ...groupsIn([itemDomain(it)]).map((g) => [g.id, g.name])], groupOf(it.nodeId)?.id || '');
   else if (c.key === 'section') { const root = groupOf(it.nodeId) || domainOf(it.nodeId); el = sel(nodeOptions([root.id], true), it.nodeId); }
   else if (c.key === 'due' || c.key === 'start' || t === 'date') el = h('input', { type: 'date', value: c.field ? it.fields[c.field.id] || '' : it[c.key] || '' });
@@ -1101,12 +1151,12 @@ const TL_SCROLL = { set: false };
 /* ---------------- Gallery ---------------- */
 function renderGallery(v, items) {
   const list = sortItems(items); const doms = scopeDomains(); const flds = fieldsFor(doms).filter((f) => !['notes', 'owner', 'priority'].includes(f.id));
-  v.append(list.length ? h('div', { class: 'gallery' }, list.map((it) => h('button', { class: 'gcard', style: { '--pc': nodeColor(it.nodeId) }, dataset: { id: it.id }, onClick: () => openCard(it.id) },
+  v.append(list.length ? h('div', { class: 'gallery' }, list.map((it) => h('div', { class: 'gcard' + (isActiveItem(it) ? ' is-active' : ''), role: 'button', tabindex: '0', 'aria-label': 'Open card ' + it.title, style: { '--pc': nodeColor(it.nodeId), '--ac': (itemBucket(it) || {}).color || 'var(--accent)' }, dataset: { id: it.id }, onClick: () => openCard(it.id), onKeydown: (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) { e.preventDefault(); openCard(it.id); } } },
     h('div', { class: 'band' }), h('div', { class: 'gbody' },
       h('div', { class: 'card-top' }, locChip(it), statusPill(it)),
       h('div', { class: 'gtitle' }, it.title), pathLabel(it.nodeId) ? h('div', { class: 'kv' }, pathLabel(it.nodeId)) : null,
       it.fields.notes ? h('div', { class: 'card-note' }, it.fields.notes) : null,
-      h('div', { class: 'card-meta' }, dueBadge(it), it.fields.owner ? h('span', { class: 'owner' }, it.fields.owner) : null, priorityPill(it), it.checklist.length ? h('span', null, `☑ ${it.checklist.filter((c) => c.done).length}/${it.checklist.length}`) : null),
+      h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner' }, it.fields.owner) : null, priorityPill(it), it.checklist.length ? h('span', null, `☑ ${it.checklist.filter((c) => c.done).length}/${it.checklist.length}`) : null),
       flds.filter((f) => !isEmpty(it.fields[f.id])).slice(0, 4).map((f) => h('div', { class: 'kv' }, f.name + ': ', h('b', null, fmtFieldVal(f, it.fields[f.id]))))))))
     : h('div', { class: 'empty' }, 'No cards match.'));
   v.append(h('div', { style: { 'margin-top': '12px' } }, h('button', { class: 'btn', onClick: () => openCard(null, {}) }, '＋ Add card')));
@@ -1144,8 +1194,8 @@ function fieldEditor(f, value, onChange) {
 }
 function openCard(id, presets = {}) {
   const existing = id ? getItem(id) : null; if (id && !existing) return;
-  const draft = existing ? null : { title: '', nodeId: presets.nodeId || defaultNodeId(), status: presets.status || null, due: presets.due || null, start: null, fields: { ...(presets.fields || {}) }, labels: [], checklist: [], comments: [] };
-  if (draft) { for (const k of Object.keys(draft.fields)) if (isEmpty(draft.fields[k])) delete draft.fields[k]; if (!draft.fields.owner && WS.people.includes('KV')) draft.fields.owner = 'KV'; }
+  const draft = existing ? null : { title: '', nodeId: presets.nodeId || defaultNodeId(), status: presets.status || null, due: presets.due || null, start: null, fields: { ...(presets.fields || {}) }, labels: [], checklist: [], comments: [], agent: presets.agent || null, taskUrl: null, source: 'kv' };
+  if (draft) { for (const k of Object.keys(draft.fields)) if (isEmpty(draft.fields[k])) delete draft.fields[k]; if (!draft.fields.owner && WS.people.includes('KV')) draft.fields.owner = 'KV'; if (!draft.agent) draft.agent = defaultAgentId(draft); }
   const cur = () => existing ? getItem(id) : draft;
   const set = (patch, fp) => {
     if (existing) { updateItem(id, patch, fp); }
@@ -1175,6 +1225,12 @@ function openCard(id, presets = {}) {
     const addCl = () => { if (!clAdd.value.trim()) return; privacyWarn(clAdd.value); set({ checklist: [...cur().checklist, { text: clAdd.value.trim(), done: false }] }); rebuild('#cm-cl-add'); };
     clAdd.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addCl(); } });
     const cmIn = h('textarea', { rows: 2, placeholder: 'Add a comment…', 'aria-label': 'New comment', id: 'cm-comment' });
+    const agentSel = h('select', { id: 'cm-agent', value: it.agent || '' }, h('option', { value: '' }, '— none —'), WS.bots.map((b) => h('option', { value: b.id }, b.name)));
+    agentSel.addEventListener('change', () => { set({ agent: agentSel.value || null }); rebuild('#cm-agent'); });
+    const taskUrl = h('input', { type: 'url', id: 'cm-taskurl', value: it.taskUrl || '', placeholder: 'https://… (optional)' });
+    taskUrl.addEventListener('change', () => { const v = taskUrl.value.trim(); if (v && !validTaskUrl(v)) { toast('Task link must start with http:// or https://'); return; } privacyWarn(v); set({ taskUrl: v || null }); rebuild(); });
+    const bot = botOf(it); const href = cardLink(it); const usesUrl = validTaskUrl(it.taskUrl);
+    const openBtn = href ? h('a', { class: 'btn primary open-bot', id: 'cm-open-bot', href, target: usesUrl ? '_blank' : null, rel: usesUrl ? 'noopener noreferrer' : null }, '🤖 ', usesUrl ? `Open task link${bot ? ' (' + bot.short + ')' : ''}` : `Open in ${bot.name}`) : h('span', { class: 'meta-line' }, 'Pick a bot to get an “Open in bot” link.');
     const body = h('div', null,
       h('div', { class: 'notice' }, 'Public page: don’t store names, phone numbers, emails, amounts, or case/account numbers.'),
       h('div', { class: 'form-grid' },
@@ -1182,6 +1238,9 @@ function openCard(id, presets = {}) {
         h('label', { class: 'fld full', for: 'cm-loc' }, h('span', null, 'Location (domain › group › section)'), loc),
         h('label', { class: 'fld', for: 'cm-status' }, h('span', null, 'Status'), st),
         h('label', { class: 'fld', for: 'cm-labels' }, h('span', null, 'Labels'), labels),
+        h('div', { class: 'bot-box full' },
+          h('div', { class: 'form-grid' }, h('label', { class: 'fld', for: 'cm-agent' }, h('span', null, 'Bot (agent)'), agentSel), h('label', { class: 'fld', for: 'cm-taskurl' }, h('span', null, 'Task link (optional, used instead of the bot link)'), taskUrl)),
+          h('div', { class: 'bot-open' }, openBtn, h('small', { class: 'meta-line', id: 'cm-bot-note' }, usesUrl ? 'Opens the task link in a new tab.' : 'Opens the bot\'s chat in the Grok Bot app (needs the app on this device).'))),
         h('label', { class: 'fld', for: 'cm-start' }, h('span', null, 'Start'), dateIn('start')),
         h('label', { class: 'fld', for: 'cm-due' }, h('span', null, 'Due'), dateIn('due')),
         fieldsFor([domId]).map((f) => fieldEditor(f, it.fields[f.id], (v) => set({}, { [f.id]: v }))),
@@ -1266,11 +1325,12 @@ function openManage(tab = 'structure') {
           h('button', { class: 'btn small danger', 'aria-label': 'Delete ' + n.name, onClick: act(async () => { if (await confirmDialog(`Delete "${n.name}" and everything under it? Cards move to the parent.`)) deleteNode(n.id); }) }, '🗑')));
       });
     } else if (cur === 'buckets') {
-      box.append(domPicker(), h('p', { class: 'meta-line' }, 'Buckets are the status columns for this domain. Mark the finished bucket(s) as “done” so they are not counted as overdue.'));
+      box.append(domPicker(), h('p', { class: 'meta-line' }, 'Buckets are the status columns for this domain. Mark the finished bucket(s) as “done” so they are not counted as overdue, and “Active (animated)” for buckets whose cards are being worked on right now (they get a moving edge light).'));
       bucketsOf(domSel).forEach((b) => {
         const name = h('input', { type: 'text', value: b.name, 'aria-label': 'Bucket name' }); name.addEventListener('change', act(() => name.value.trim() && updateBucket(b.id, { name: name.value.trim() })));
         const color = h('input', { type: 'color', value: b.color, 'aria-label': 'Bucket color' }); color.addEventListener('change', act(() => updateBucket(b.id, { color: color.value })));
         box.append(h('div', { class: 'mrow', dataset: { mbucket: b.id } }, color, name, h('label', { class: 'small-check' }, h('input', { type: 'checkbox', checked: !!b.isDone, onChange: act((e) => updateBucket(b.id, { isDone: e.target.checked })) }), 'done'),
+          h('label', { class: 'small-check', title: 'Cards in this bucket get the animated edge light' }, h('input', { type: 'checkbox', class: 'mg-active', checked: !!b.isActive, onChange: act((e) => updateBucket(b.id, { isActive: e.target.checked })) }), 'Active (animated)'),
           h('button', { class: 'icon-btn', 'aria-label': 'Move up', onClick: act(() => moveBucket(b.id, -1)) }, '↑'), h('button', { class: 'icon-btn', 'aria-label': 'Move down', onClick: act(() => moveBucket(b.id, 1)) }, '↓'),
           h('button', { class: 'btn small danger', 'aria-label': 'Delete bucket ' + b.name, onClick: act(async () => { if (await confirmDialog(`Delete bucket "${b.name}"? Cards move to the first remaining bucket.`)) deleteBucket(b.id); }) }, '🗑')));
       });
