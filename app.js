@@ -5,12 +5,21 @@
 'use strict';
 const TZ = 'America/Chicago';
 const SCHEMA = 3; // v3: bots map, bucket isActive, item agent/taskUrl
-const LS = { ws: 'mre.ws.v2', items: 'mre.items.v2', ui: 'mre.ui.v2', token: 'mre.gh.token', repo: 'mre.gh.repo', sync: 'mre.sync.v2' };
-const VIEWS = [
+const LS = { ws: 'mre.ws.v2', items: 'mre.items.v2', ui: 'mre.ui.v2', token: 'mre.gh.token', repo: 'mre.gh.repo', sync: 'mre.sync.v2', start: 'mre.startView' };
+/* Built-in "Action type" card field (multi-select). Values live in item.fields.actionType as option ids. */
+const AT = 'actionType';
+const AT_ICONS = {
+  wrench: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.9 1.9 0 0 0 2.7 2.7l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.3-.5-.5-2.3z"/></svg>',
+  envelope: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
+  chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a7.5 7 0 0 1-10.9 6.2L4 19.5l1.4-4.3A7 7 0 0 1 4.5 12 7.5 7 0 0 1 20 12z"/></svg>',
+};
+const AT_FIELD = { id: AT, domainId: null, name: 'Action type', type: 'multi-select', builtin: true, order: 0.5, updatedAt: '2026-09-26T16:00:00-05:00',
+  options: [{ id: 'physical', name: 'Physical', color: '#b45309', icon: 'wrench' }, { id: 'email', name: 'Email', color: '#4f46e5', icon: 'envelope' }, { id: 'sms', name: 'SMS', color: '#059669', icon: 'chat' }] };
+const VIEWS = [ // the four main views first (also the first four in the phone tab bar); 'grid' keeps its internal id
   { id: 'kanban', name: 'Kanban', ico: '▥' },
-  { id: 'grid', name: 'Grid', ico: '▦' },
   { id: 'dashboard', name: 'Dashboard', ico: '◔' },
   { id: 'calendar', name: 'Calendar', ico: '▣' },
+  { id: 'grid', name: 'Spreadsheet', ico: '▦' },
   { id: 'timeline', name: 'Timeline', ico: '☰' },
   { id: 'gallery', name: 'Gallery', ico: '▤' },
 ];
@@ -76,11 +85,16 @@ function resolveDateToken(v) { if (v === 'today') return todayStr(); const m = /
 /* ---------------- state ---------------- */
 let WS = null;   // workspace doc
 let IT = null;   // items doc
-const DEFAULT_UI = { view: 'kanban', scope: 'all', search: '', quick: { domain: '', groups: [], section: '', status: '', owner: '' },
+const DEFAULT_UI = { view: 'kanban', scope: 'all', search: '', quick: { domain: '', groups: [], section: '', status: '', owner: '', actionType: [] },
   rules: [], sort: { key: 'due', dir: 1 }, groupBy: 'status', calMonth: null, calDay: null, colFilters: {}, collapsed: {}, showArchived: false, activeSaved: '' };
 let UI = loadUI();
 function loadUI() { try { return Object.assign(clone(DEFAULT_UI), JSON.parse(localStorage.getItem(LS.ui) || '{}')); } catch { return clone(DEFAULT_UI); } }
 function saveUI() { try { localStorage.setItem(LS.ui, JSON.stringify(UI)); } catch {} }
+/* "Start in": per-device default view ('last' = reopen the last-used view, which UI.view already remembers). ?view= still wins. */
+function getStartView() { try { const v = localStorage.getItem(LS.start); return v && (v === 'last' || VIEWS.some((x) => x.id === v)) ? v : 'last'; } catch { return 'last'; } }
+function setStartView(v) { try { localStorage.setItem(LS.start, v); } catch {} }
+const viewName = (id) => (VIEWS.find((v) => v.id === id) || { name: id }).name;
+if (getStartView() !== 'last') UI.view = getStartView();
 if (QS.get('view') && VIEWS.some((v) => v.id === QS.get('view'))) UI.view = QS.get('view');
 
 /* ---------------- defaults & migration ---------------- */
@@ -145,6 +159,12 @@ function normWS(ws) {
   // v3: "In Progress" buckets are active (animated edge light) unless KV turned it off
   ws.buckets.forEach((b) => { if (b.isActive === undefined) b.isActive = /^in progress$/i.test(b.name); });
   ws.nodes.forEach((n) => { n.archived = !!n.archived; if (n.order == null) n.order = 0; });
+  // built-in Action type field: always present, keeps KV's renames/colors, restores missing default options + icons
+  ws.deleted = ws.deleted.filter((t) => !(t.kind === 'field' && t.id === AT));
+  let atf = ws.fields.find((f) => f.id === AT);
+  if (!atf) ws.fields.push(atf = JSON.parse(JSON.stringify(AT_FIELD)));
+  atf.builtin = true; atf.type = 'multi-select'; if (!Array.isArray(atf.options)) atf.options = [];
+  AT_FIELD.options.forEach((o) => { const x = atf.options.find((y) => y.id === o.id); if (!x) atf.options.push({ ...o }); else { if (!x.icon) x.icon = o.icon; if (!x.color) x.color = o.color; if (!x.name) x.name = o.name; } });
   // every domain needs at least one bucket
   ws.nodes.filter((n) => n.type === 'domain').forEach((d) => { if (!ws.buckets.some((b) => b.domainId === d.id)) ws.buckets.push(...defaultBuckets(d.id, ws.updated || nowISO())); });
   return ws;
@@ -195,6 +215,14 @@ function fieldDef(id) { return WS.fields.find((f) => f.id === id); }
 function fieldOptions(f) { if (f.type === 'person') return WS.people.map((p) => ({ id: p, name: p, color: null })); return f.options || []; }
 function optName(f, v) { const o = fieldOptions(f).find((o) => o.id === v || o.name === v); return o ? o.name : v; }
 function optColor(f, v) { const o = fieldOptions(f).find((o) => o.id === v || o.name === v); return o && o.color; }
+function atIcon(name) { const s = document.createElement('span'); s.className = 'at-ico'; s.setAttribute('aria-hidden', 'true'); s.innerHTML = AT_ICONS[name] || ''; return s; }
+const atValues = (it) => { const v = it && it.fields ? it.fields[AT] : null; return Array.isArray(v) ? v : v ? [v] : []; };
+function atOptions() { const f = fieldDef(AT); return f ? f.options || [] : AT_FIELD.options; }
+function actionChips(it, compact) {
+  const opts = atOptions(); const vals = atValues(it).map((v) => opts.find((o) => o.id === v || o.name === v)).filter(Boolean); if (!vals.length) return null;
+  return h('span', { class: 'at-chips' + (compact ? ' compact' : ''), title: 'Action type: ' + vals.map((o) => o.name).join(', ') },
+    vals.map((o) => h('span', { class: 'at-chip', style: { '--atc': o.color || '#64748b' }, dataset: { at: o.id } }, atIcon(o.icon), h('span', { class: 'at-name' }, o.name))));
+}
 function fmtFieldVal(f, v) {
   if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
   switch (f.type) {
@@ -464,6 +492,7 @@ function visibleItems(opts = {}) {
     if (secSet && !secSet.has(it.nodeId)) return false;
     if (q.status && !opts.ignoreStatus && statusKey(it) !== q.status) return false;
     if (q.owner && (it.fields.owner || '') !== q.owner) return false;
+    if (q.actionType && q.actionType.length && !atValues(it).some((v) => q.actionType.includes(v))) return false;
     for (const r of UI.rules) if (!testRule(it, r, defs)) return false;
     if (s && !s.split(/\s+/).every((w) => searchText(it).includes(w))) return false;
     return true;
@@ -476,6 +505,7 @@ function sortVal(it, key) {
   if (key === 'domain') { const d = domainOf(it.nodeId); return d ? d.order : 99; }
   if (key === 'createdAt' || key === 'updatedAt') return tsNum(it[key]);
   const v = getVal(it, key);
+  if (key === 'f:' + AT) { const opts = atOptions(); const idx = atValues(it).map((x) => opts.findIndex((o) => o.id === x)).filter((i) => i >= 0); return idx.length ? idx.map((i) => String(i).padStart(2, '0')).join(',') : null; }
   if (key.startsWith('f:')) { const f = fieldDef(key.slice(2)); if (f && f.type === 'number') return v === '' || v == null ? null : Number(v); if (f) return fmtFieldVal(f, v).toLowerCase() || null; }
   if (Array.isArray(v)) return v.join(',').toLowerCase() || null;
   return v === '' || v == null ? null : String(v).toLowerCase();
@@ -512,6 +542,7 @@ function describeChange(b, it, patch, fp) {
   if ('checklist' in patch) { const d0 = b.checklist.filter((c) => c.done).length, d1 = it.checklist.filter((c) => c.done).length;
     out.push(it.checklist.length > b.checklist.length ? 'Added a checklist item' : d1 > d0 ? 'Checked off a checklist item' : it.checklist.length < b.checklist.length ? 'Removed a checklist item' : 'Updated checklist'); }
   if ('comments' in patch && it.comments.length > b.comments.length) out.push('Added a comment');
+  if (fp && AT in fp && JSON.stringify(b.fields[AT] ?? []) !== JSON.stringify(it.fields[AT] ?? [])) { const n = atValues(it).map((v) => (atOptions().find((o) => o.id === v) || { name: v }).name); out.push(n.length ? 'Set action type: ' + n.join(', ') : 'Cleared action type'); fp = { ...fp }; delete fp[AT]; }
   if (fp) { const names = Object.keys(fp).filter((k) => JSON.stringify(b.fields[k] ?? null) !== JSON.stringify(it.fields[k] ?? null)).map((k) => (fieldDef(k) || { name: k }).name); if (names.length) out.push('Updated ' + names.join(', ')); }
   return out;
 }
@@ -606,7 +637,7 @@ function setFieldOptionsFromText(f, text) {
   wsTouch(f); wsChanged();
 }
 function moveField(id, dir) { const fs = WS.fields.slice().sort(byOrder); const i = fs.findIndex((f) => f.id === id), j = i + dir; if (j < 0 || j >= fs.length) return; [fs[i], fs[j]] = [fs[j], fs[i]]; fs.forEach((x, k) => { if (x.order !== k) { x.order = k; wsTouch(x); } }); wsChanged(); }
-function deleteField(id) { WS.fields = WS.fields.filter((f) => f.id !== id); tomb('field', id); UI.rules = UI.rules.filter((r) => r.field !== 'f:' + id); if (UI.groupBy === 'f:' + id) UI.groupBy = 'status'; wsChanged(); }
+function deleteField(id) { if (id === AT) { toast('Action type is built in and can’t be deleted'); return; } WS.fields = WS.fields.filter((f) => f.id !== id); tomb('field', id); UI.rules = UI.rules.filter((r) => r.field !== 'f:' + id); if (UI.groupBy === 'f:' + id) UI.groupBy = 'status'; wsChanged(); }
 function currentViewState() { return { view: UI.view, scope: UI.scope, search: UI.search, quick: clone(UI.quick), rules: clone(UI.rules), sort: clone(UI.sort), groupBy: UI.groupBy, colFilters: clone(UI.colFilters) }; }
 function saveView(name) { const v = wsTouch({ id: uid('sv'), name: name.trim() || 'Saved view', ...currentViewState() }); WS.savedViews.push(v); UI.activeSaved = v.id; wsChanged(); return v; }
 function applySaved(id) {
@@ -722,17 +753,31 @@ async function moveNodeDialog(n) {
   const r = await formDialog({ title: `Move "${n.name}" under…`, fields: [{ name: 'p', label: 'New parent', type: 'select', value: n.parentId, options: opts }], ok: 'Move' });
   if (r) reparentNode(n.id, r.p);
 }
-function renderTabs() {
-  const nav = $('#viewTabs'); nav.innerHTML = '';
-  VIEWS.forEach((v) => nav.append(h('button', { class: 'tab', role: 'tab', id: 'tab-' + v.id, 'aria-selected': String(UI.view === v.id), 'aria-controls': 'view', tabindex: UI.view === v.id ? '0' : '-1', dataset: { view: v.id },
-    onClick: () => { UI.view = v.id; render(); },
-    onKeydown: (e) => { const i = VIEWS.findIndex((x) => x.id === UI.view); let j = null; if (e.key === 'ArrowRight') j = (i + 1) % VIEWS.length; if (e.key === 'ArrowLeft') j = (i - 1 + VIEWS.length) % VIEWS.length; if (j != null) { e.preventDefault(); UI.view = VIEWS[j].id; render(); $('#tab-' + UI.view).focus(); } } },
-    h('span', { class: 'ico', 'aria-hidden': 'true' }, v.ico), h('span', null, v.name))));
+function tabMenu(anchor, v) {
+  const sv = getStartView(); const isDef = sv === v.id;
+  openMenu(anchor, [{ title: v.name },
+    isDef ? { label: 'Default view ✓ (use last-used instead)', icon: '★', onClick: () => { setStartView('last'); toast('Start in: last-used view'); renderTabs(); } }
+      : { label: 'Set as default', icon: '☆', onClick: () => { setStartView(v.id); toast('Start in: ' + v.name); renderTabs(); } },
+    { label: 'Start-in settings…', icon: '⚙', onClick: () => openSettings() }]);
 }
-function activeFilterCount() { const q = UI.quick; return UI.rules.length + (q.domain ? 1 : 0) + (q.section ? 1 : 0) + (q.status ? 1 : 0) + (q.owner ? 1 : 0) + ((q.groups || []).length ? 1 : 0); }
+function renderTabs() {
+  const nav = $('#viewTabs'); nav.innerHTML = ''; const sv = getStartView();
+  VIEWS.forEach((v) => { const tab = h('button', { class: 'tab' + (sv === v.id ? ' is-default' : ''), role: 'tab', id: 'tab-' + v.id, 'aria-selected': String(UI.view === v.id), 'aria-controls': 'view', tabindex: UI.view === v.id ? '0' : '-1', dataset: { view: v.id }, title: sv === v.id ? v.name + ' (opens by default)' : null,
+    onClick: () => { if (Date.now() - (tabMenu.lp || 0) < 600) return; UI.view = v.id; render(); },
+    onContextmenu: (e) => { e.preventDefault(); tabMenu(e.currentTarget, v); },
+    onKeydown: (e) => { const i = VIEWS.findIndex((x) => x.id === UI.view); let j = null; if (e.key === 'ArrowRight') j = (i + 1) % VIEWS.length; if (e.key === 'ArrowLeft') j = (i - 1 + VIEWS.length) % VIEWS.length; if (j != null) { e.preventDefault(); UI.view = VIEWS[j].id; render(); $('#tab-' + UI.view).focus(); } } },
+    h('span', { class: 'ico', 'aria-hidden': 'true' }, v.ico), h('span', { class: 'tab-label' }, v.name), sv === v.id ? h('span', { class: 'def-star', 'aria-label': '(default view)' }, '★') : null);
+    // long-press (touch) opens the tab menu too
+    let t = null; tab.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') return; clearTimeout(t); t = setTimeout(() => { tabMenu.lp = Date.now(); tabMenu(tab, v); }, 550); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => tab.addEventListener(ev, () => clearTimeout(t)));
+    nav.append(tab);
+    if (UI.view === v.id) nav.append(h('button', { class: 'tab-more', id: 'tabMore-' + v.id, 'aria-label': v.name + ' view options', 'aria-haspopup': 'menu', title: 'View options (Set as default)', onClick: (e) => tabMenu(e.currentTarget, v) }, '▾'));
+  });
+}
+function activeFilterCount() { const q = UI.quick; return UI.rules.length + (q.domain ? 1 : 0) + (q.section ? 1 : 0) + (q.status ? 1 : 0) + (q.owner ? 1 : 0) + ((q.groups || []).length ? 1 : 0) + ((q.actionType || []).length ? 1 : 0); }
 function groupByOptions() {
   const opts = [['status', 'Status'], ['group', 'Property / group'], ['section', 'Section'], ['agent', 'Bot']];
-  fieldsFor(scopeDomains()).filter((f) => ['single-select', 'person'].includes(f.type)).forEach((f) => opts.push(['f:' + f.id, f.name]));
+  fieldsFor(scopeDomains()).filter((f) => ['single-select', 'person'].includes(f.type) || f.id === AT).forEach((f) => opts.push(['f:' + f.id, f.name]));
   return opts;
 }
 function renderToolbar() {
@@ -762,10 +807,15 @@ function renderChips() {
   const sel = UI.quick.groups || [];
   if (UI.scope === 'all' && domains().length > 1) {
     domains().forEach((d) => c.append(h('button', { class: 'chip', 'aria-pressed': String(UI.quick.domain === d.id), style: { '--chip': d.color }, onClick: () => { UI.quick.domain = UI.quick.domain === d.id ? '' : d.id; UI.quick.groups = []; UI.activeSaved = ''; render(); } }, h('span', { class: 'dot', style: { background: d.color } }), d.name)));
-    if (groups.length) c.append(h('span', { class: 'chip-sep', 'aria-hidden': 'true' }));
+    c.append(h('span', { class: 'chip-sep', 'aria-hidden': 'true' }));
   }
+  // action-type quick filters (show cards with ANY of the picked types)
+  const atSel = UI.quick.actionType || [];
+  atOptions().forEach((o) => c.append(h('button', { class: 'chip at-filter', 'aria-pressed': String(atSel.includes(o.id)), style: { '--chip': o.color }, dataset: { atFilter: o.id }, title: 'Show ' + o.name + ' cards',
+    onClick: () => { const st = new Set(UI.quick.actionType || []); st.has(o.id) ? st.delete(o.id) : st.add(o.id); UI.quick.actionType = atOptions().map((x) => x.id).filter((x) => st.has(x)); UI.activeSaved = ''; render(); } }, h('span', { class: 'at-chip-ico', style: { color: o.color } }, atIcon(o.icon)), o.name)));
   const showGroups = groups.filter((g) => !UI.quick.domain || domainOf(g.id).id === UI.quick.domain);
   if (showGroups.length > 1) {
+    c.append(h('span', { class: 'chip-sep', 'aria-hidden': 'true' }));
     c.append(h('button', { class: 'chip', 'aria-pressed': String(!sel.length), onClick: () => { UI.quick.groups = []; UI.activeSaved = ''; render(); } }, 'All properties'));
     showGroups.forEach((g) => c.append(h('button', { class: 'chip', 'aria-pressed': String(sel.includes(g.id)), style: { '--chip': g.color }, dataset: { group: g.id },
       onClick: () => { const s = new Set(sel); s.has(g.id) ? s.delete(g.id) : s.add(g.id); UI.quick.groups = [...s]; UI.activeSaved = ''; render(); } }, h('span', { class: 'dot', style: { background: g.color } }), g.name.replace(/\s*\(.*\)$/, ''))));
@@ -855,7 +905,7 @@ function cardEl(it) {
     h('div', { class: 'card-top' }, locChip(it), sec ? h('span', { class: 'card-sec' }, sec) : null),
     h('div', { class: 'card-title' }, it.title),
     it.fields.notes ? h('div', { class: 'card-note' }, it.fields.notes) : null,
-    h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner', title: 'Owner' }, it.fields.owner) : null, priorityPill(it),
+    h('div', { class: 'card-meta' }, actionChips(it), dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner', title: 'Owner' }, it.fields.owner) : null, priorityPill(it),
       cl.length ? h('span', { title: 'Checklist' }, `☑ ${doneN}/${cl.length}`) : null, it.comments.length ? h('span', { title: 'Comments' }, `💬 ${it.comments.length}`) : null,
       it.labels.map((l) => h('span', { class: 'label' }, l))),
     activityLine(it),
@@ -881,6 +931,7 @@ function colKeyOf(it, gb = UI.groupBy) {
   if (gb === 'group') { const g = groupOf(it.nodeId); return g ? g.id : ''; }
   if (gb === 'section') return it.nodeId || '';
   if (gb === 'agent') return it.agent || '';
+  if (gb === 'f:' + AT) { const v = atValues(it); return v[0] || ''; } // cards with several types sit under their first (primary) type
   if (gb.startsWith('f:')) { const f = fieldDef(gb.slice(2)); const v = it.fields[gb.slice(2)]; if (!f || isEmpty(v)) return ''; const o = fieldOptions(f).find((o) => o.id === v || o.name === v); return o ? o.id : ''; }
   return '';
 }
@@ -909,6 +960,7 @@ function dropTo(id, key, index) {
   else if (gb === 'group') { if (groupOf(it.nodeId)?.id !== key) patch.nodeId = defaultNodeIdFor(key); }
   else if (gb === 'section') patch.nodeId = key;
   else if (gb === 'agent') patch.agent = key || null;
+  else if (gb === 'f:' + AT) { const curV = atValues(it); if (curV[0] !== key) fp = { [AT]: [key, ...curV.slice(1).filter((x) => x !== key)] }; } // new primary type replaces the old one, extra types stay
   else fp = { [gb.slice(2)]: key || null };
   updateItem(id, patch, fp);
   requestAnimationFrame(() => { const el = $(`.card[data-id="${CSS.escape(id)}"]`); if (el && DND.keyboard) el.focus(); DND.keyboard = false; });
@@ -917,7 +969,7 @@ function renderKanban(v, items) {
   const { cols, single, gb } = kanbanColumns(items);
   const board = h('div', { class: 'board', role: 'list', 'aria-label': 'Kanban board' });
   cols.forEach((c, ci) => {
-    const presets = gb === 'status' ? (c.bucket ? { status: c.bucket.id } : {}) : gb === 'group' ? { nodeId: c.key && defaultNodeIdFor(c.key) } : gb === 'section' ? { nodeId: c.key } : gb === 'agent' ? { agent: c.key } : { fields: { [gb.slice(2)]: c.key } };
+    const presets = gb === 'status' ? (c.bucket ? { status: c.bucket.id } : {}) : gb === 'group' ? { nodeId: c.key && defaultNodeIdFor(c.key) } : gb === 'section' ? { nodeId: c.key } : gb === 'agent' ? { agent: c.key } : gb === 'f:' + AT ? { fields: { [AT]: c.key ? [c.key] : [] } } : { fields: { [gb.slice(2)]: c.key } };
     board.append(h('section', { class: 'col', role: 'listitem', style: { '--cc': c.color }, dataset: { key: c.key }, 'aria-label': `${c.name}, ${c.items.length} cards` },
       h('div', { class: 'col-head' }, h('span', { class: 'dot', style: { background: c.color } }), h('span', null, c.name), h('span', { class: 'count' }, c.items.length),
         c.bucket ? h('button', { class: 'icon-btn', 'aria-label': 'Bucket options for ' + c.name, onClick: (e) => bucketMenu(e.currentTarget, c.bucket) }, '⋯') : null),
@@ -1047,6 +1099,7 @@ function renderGrid(v, items) {
     else if (c.key === 'agent') { const b = botOf(it); content = b ? h('span', { class: 'bot-name' }, '🤖 ', b.short || b.name) : ''; }
     else if (c.key === 'group') { content = locChip(it) || ''; }
     else if (c.key === 'due') { content = dueBadge(it) || ''; }
+    else if (c.field && c.field.id === AT) content = actionChips(it) || '';
     else if (c.field && c.field.type === 'checkbox') content = it.fields[c.field.id] ? '☑' : '☐';
     else if (c.field && c.field.type === 'url' && txt) content = h('a', { href: /^https?:/i.test(txt) ? txt : 'https://' + txt, target: '_blank', rel: 'noopener noreferrer', onClick: (e) => e.stopPropagation() }, txt);
     else content = txt;
@@ -1199,13 +1252,13 @@ const TL_SCROLL = { set: false };
 
 /* ---------------- Gallery ---------------- */
 function renderGallery(v, items) {
-  const list = sortItems(items); const doms = scopeDomains(); const flds = fieldsFor(doms).filter((f) => !['notes', 'owner', 'priority'].includes(f.id));
+  const list = sortItems(items); const doms = scopeDomains(); const flds = fieldsFor(doms).filter((f) => !['notes', 'owner', 'priority', AT].includes(f.id));
   v.append(list.length ? h('div', { class: 'gallery' }, list.map((it) => h('div', { class: 'gcard' + (isActiveItem(it) ? ' is-active' : ''), role: 'button', tabindex: '0', 'aria-label': 'Open card ' + it.title, style: { '--pc': nodeColor(it.nodeId), '--ac': (itemBucket(it) || {}).color || 'var(--accent)' }, dataset: { id: it.id }, onClick: () => openCard(it.id), onKeydown: (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) { e.preventDefault(); openCard(it.id); } } },
     h('div', { class: 'band' }), h('div', { class: 'gbody' },
       h('div', { class: 'card-top' }, locChip(it), statusPill(it)),
       h('div', { class: 'gtitle' }, it.title), pathLabel(it.nodeId) ? h('div', { class: 'kv' }, pathLabel(it.nodeId)) : null,
       it.fields.notes ? h('div', { class: 'card-note' }, it.fields.notes) : null,
-      h('div', { class: 'card-meta' }, dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner' }, it.fields.owner) : null, priorityPill(it), it.checklist.length ? h('span', null, `☑ ${it.checklist.filter((c) => c.done).length}/${it.checklist.length}`) : null),
+      h('div', { class: 'card-meta' }, actionChips(it), dueBadge(it), botChip(it), it.fields.owner ? h('span', { class: 'owner' }, it.fields.owner) : null, priorityPill(it), it.checklist.length ? h('span', null, `☑ ${it.checklist.filter((c) => c.done).length}/${it.checklist.length}`) : null),
       flds.filter((f) => !isEmpty(it.fields[f.id])).slice(0, 4).map((f) => h('div', { class: 'kv' }, f.name + ': ', h('b', null, fmtFieldVal(f, it.fields[f.id])))), activityLine(it)))))
     : h('div', { class: 'empty' }, 'No cards match.'));
   v.append(h('div', { style: { 'margin-top': '12px' } }, h('button', { class: 'btn', onClick: () => openCard(null, {}) }, '＋ Add card')));
@@ -1234,7 +1287,7 @@ function fieldEditor(f, value, onChange) {
     case 'checkbox': el = h('input', { id, type: 'checkbox', checked: !!value }); el.addEventListener('change', () => onChange(el.checked)); return h('label', { class: 'fld' }, h('span', null, f.name), h('span', null, el, ' Yes'));
     case 'single-select': case 'person': el = h('select', { id, value: value || '' }, h('option', { value: '' }, '—'), fieldOptions(f).map((o) => h('option', { value: o.id }, o.name))); el.addEventListener('change', () => onChange(el.value || null)); break;
     case 'multi-select': { const cur = new Set(Array.isArray(value) ? value : []); el = h('div', { id, class: 'chips', style: { padding: '0', 'flex-wrap': 'wrap' }, role: 'group', 'aria-label': f.name },
-      fieldOptions(f).map((o) => h('button', { type: 'button', class: 'chip', style: { '--chip': o.color || 'var(--accent)' }, 'aria-pressed': String(cur.has(o.id)), onClick: (e) => { cur.has(o.id) ? cur.delete(o.id) : cur.add(o.id); e.currentTarget.setAttribute('aria-pressed', String(cur.has(o.id))); onChange([...cur]); } }, o.name)));
+      fieldOptions(f).map((o) => h('button', { type: 'button', class: 'chip', style: { '--chip': o.color || 'var(--accent)' }, dataset: { opt: o.id }, 'aria-pressed': String(cur.has(o.id)), onClick: (e) => { cur.has(o.id) ? cur.delete(o.id) : cur.add(o.id); e.currentTarget.setAttribute('aria-pressed', String(cur.has(o.id))); onChange(f.id === AT ? fieldOptions(f).map((x) => x.id).filter((x) => cur.has(x)) : [...cur]); } }, o.icon ? atIcon(o.icon) : null, o.name)));
       if (!fieldOptions(f).length) el.append(h('span', { class: 'meta-line' }, 'No options yet — add them in Manage › Fields.')); break; }
     case 'url': el = h('input', { id, type: 'url', value: value || '', placeholder: 'https://' }); el.addEventListener('change', () => onChange(el.value.trim() || null)); break;
     default: el = h('input', { id, type: 'text', value: value ?? '' }); el.addEventListener('change', () => { privacyWarn(el.value); onChange(el.value.trim() || null); });
@@ -1328,6 +1381,11 @@ function openSettings() {
   const file = h('input', { type: 'file', accept: 'application/json,.json', hidden: true, onChange: async (e) => { const f = e.target.files[0]; if (!f) return; try { importJSON(JSON.parse(await f.text())); toast('Imported and merged'); } catch (err) { toast('Import failed: ' + err.message); } } });
   const body = h('div', null,
     h('div', { class: 'notice', id: 'publicNotice' }, h('b', null, 'Public page: don’t store private info. '), 'This board is published on a public GitHub Pages site. Use property + unit + a short task only — no tenant or applicant names, phone numbers, emails, dollar amounts, or case/account numbers.'),
+    h('h3', null, 'Start in'),
+    h('div', { class: 'form-grid' }, h('label', { class: 'fld', for: 'startViewSel' }, h('span', null, 'View that opens by default on this device'),
+      h('select', { id: 'startViewSel', value: getStartView(), onChange: (e) => { setStartView(e.target.value); renderTabs(); toast('Start in: ' + (e.target.value === 'last' ? 'last-used view' : viewName(e.target.value))); } },
+        VIEWS.slice(0, 4).map((v) => h('option', { value: v.id }, v.name)), h('optgroup', { label: 'More' }, VIEWS.slice(4).map((v) => h('option', { value: v.id }, v.name))), h('option', { value: 'last' }, 'Last-used view (remember where I left off)'))),
+      h('p', { class: 'meta-line', id: 'startViewNote' }, `Saved on this device only. Last used: ${viewName(UI.view)}. Tip: right-click or long-press a view tab (or its ▾) → Set as default.`)),
     h('h3', null, 'GitHub sync'),
     h('div', { class: 'form-grid' },
       h('label', { class: 'fld' }, h('span', null, 'Owner'), owner), h('label', { class: 'fld' }, h('span', null, 'Repository'), repo),
@@ -1398,6 +1456,8 @@ function openManage(tab = 'structure') {
     } else if (cur === 'fields') {
       box.append(h('p', { class: 'meta-line' }, 'Custom fields appear automatically in the grid, filters, card editor, and gallery. “All domains” fields apply everywhere.'));
       WS.fields.slice().sort(byOrder).forEach((f) => {
+        if (f.builtin) { box.append(h('div', { class: 'mrow', dataset: { mfield: f.id } }, h('span', { style: { flex: '1' } }, h('b', null, f.name), ' — built in (multi-select): ', actionChips({ fields: { [AT]: (f.options || []).map((o) => o.id) } })),
+          h('button', { class: 'icon-btn', 'aria-label': 'Move up', onClick: act(() => moveField(f.id, -1)) }, '↑'), h('button', { class: 'icon-btn', 'aria-label': 'Move down', onClick: act(() => moveField(f.id, 1)) }, '↓'))); return; }
         const name = h('input', { type: 'text', value: f.name, 'aria-label': 'Field name' }); name.addEventListener('change', act(() => name.value.trim() && updateField(f.id, { name: name.value.trim() })));
         const type = h('select', { 'aria-label': 'Field type', value: f.type, onChange: act((e) => updateField(f.id, { type: e.target.value, options: f.options || [] })) }, FIELD_TYPES.map(([v, l]) => h('option', { value: v }, l)));
         const scope = h('select', { 'aria-label': 'Applies to', value: f.domainId || '', onChange: act((e) => updateField(f.id, { domainId: e.target.value || null })) }, h('option', { value: '' }, 'All domains'), domains(true).map((d) => h('option', { value: d.id }, d.name)));
