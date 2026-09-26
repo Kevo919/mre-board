@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "name": "MRE Work Board",
-  "updated": "2026-09-26T15:44:21-05:00",
+  "updated": "2026-09-26T16:01:02-05:00",
   "nodes": [
     {
       "id": "d-re",
@@ -567,6 +567,35 @@
       "type": "long-text",
       "order": 2,
       "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "actionType",
+      "domainId": null,
+      "name": "Action type",
+      "type": "multi-select",
+      "builtin": true,
+      "order": 0.5,
+      "updatedAt": "2026-09-26T16:00:00-05:00",
+      "options": [
+        {
+          "id": "physical",
+          "name": "Physical",
+          "color": "#b45309",
+          "icon": "wrench"
+        },
+        {
+          "id": "email",
+          "name": "Email",
+          "color": "#4f46e5",
+          "icon": "envelope"
+        },
+        {
+          "id": "sms",
+          "name": "SMS",
+          "color": "#059669",
+          "icon": "chat"
+        }
+      ]
     }
   ],
   "people": [
