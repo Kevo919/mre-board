@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 2,
+  "updated": "2026-09-26T15:00:00-05:00",
+  "items": [
+    {
+      "id": "echo-b-city-reinspection",
+      "nodeId": "s-echo-unit-b",
+      "status": "b-re-todo",
+      "title": "City reinspection Wed Oct 14, 2:30 PM",
+      "fields": {
+        "owner": "Maintenance",
+        "notes": "Post notice on the door and confirm tenant access."
+      },
+      "start": null,
+      "due": "2026-10-14",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Maintenance",
+      "lastEditedBy": "Maintenance",
+      "order": 0,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "echo-b-extension-in-writing",
+      "nodeId": "s-echo-unit-b",
+      "status": "b-re-todo",
+      "title": "Confirm in writing the city's Nov 20 extension",
+      "fields": {
+        "owner": "Maintenance",
+        "notes": "Extension covers wall water damage and drywall."
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Maintenance",
+      "lastEditedBy": "Maintenance",
+      "order": 1,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "echo-plumber-water-bill",
+      "nodeId": "s-echo-tasks",
+      "status": "b-re-todo",
+      "title": "Plumber access to all units to investigate high water bill",
+      "fields": {
+        "owner": "Maintenance"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Maintenance",
+      "lastEditedBy": "Maintenance",
+      "order": 2,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "red-maple-overdue-invoices",
+      "nodeId": "s-echo-vendors",
+      "status": "b-re-todo",
+      "title": "Red Maple Landscaping overdue invoices (Echo + Plum)",
+      "fields": {
+        "owner": "Vendors",
+        "notes": "Covers both Echo and Plum."
+      },
+      "start": null,
+      "due": "2026-09-22",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Plum"
+      ],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "order": 3,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "general-contractor-zelle",
+      "nodeId": "s-general-vendors",
+      "status": "b-re-todo",
+      "title": "Pay or resolve repair contractor's pending Zelle request",
+      "fields": {
+        "owner": "Vendors"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "order": 4,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "general-sheriff-form",
+      "nodeId": "s-general-tasks",
+      "status": "b-re-todo",
+      "title": "File signed Sheriff form for eviction case with Cook County Sheriff",
+      "fields": {
+        "owner": "KV"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "kv",
+      "lastEditedBy": "kv",
+      "order": 5,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-insurance-claim",
+      "nodeId": "s-mohawk-tasks",
+      "status": "b-re-todo",
+      "title": "Insurance claim follow-up",
+      "fields": {
+        "owner": "KV",
+        "notes": "Response window lapsed around Sep 21."
+      },
+      "start": null,
+      "due": "2026-09-21",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "kv",
+      "lastEditedBy": "kv",
+      "order": 6,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-pro-builders-quote",
+      "nodeId": "s-mohawk-vendors",
+      "status": "b-re-todo",
+      "title": "Review Pro Builders quote",
+      "fields": {
+        "owner": "Vendors"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "order": 7,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "echo-wm-invoice-check",
+      "nodeId": "s-echo-bills",
+      "status": "b-re-todo",
+      "title": "Check whether the WM waste invoice is a mistake",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Service was switched to Groot."
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 8,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-list-openings",
+      "nodeId": "s-mohawk-leasing",
+      "status": "b-re-todo",
+      "title": "List upcoming openings",
+      "fields": {
+        "owner": "Leasing"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Leasing",
+      "lastEditedBy": "Leasing",
+      "order": 9,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "college-property-details",
+      "nodeId": "s-college-tasks",
+      "status": "b-re-todo",
+      "title": "Add property details and tenant roster",
+      "fields": {
+        "owner": "KV"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "kv",
+      "lastEditedBy": "kv",
+      "order": 10,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "echo-a-drywall-moisture",
+      "nodeId": "s-echo-unit-a",
+      "status": "b-re-inprogress",
+      "title": "Water and saturated drywall near toilet",
+      "fields": {
+        "owner": "Maintenance",
+        "notes": "Moisture check; need access to the unit above."
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Maintenance",
+      "lastEditedBy": "Maintenance",
+      "order": 11,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "crown-turnover-oct1",
+      "nodeId": "s-crown-leasing",
+      "status": "b-re-inprogress",
+      "title": "Vacant Oct 1: turnover and listing prep",
+      "fields": {
+        "owner": "Leasing"
+      },
+      "start": null,
+      "due": "2026-10-01",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Leasing",
+      "lastEditedBy": "Leasing",
+      "order": 12,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-porch-estimate",
+      "nodeId": "s-mohawk-vendors",
+      "status": "b-re-inprogress",
+      "title": "Porch estimate with handyman",
+      "fields": {
+        "owner": "Vendors"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "order": 13,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "general-due-date-list",
+      "nodeId": "s-general-bills",
+      "status": "b-re-inprogress",
+      "title": "Build mortgage and utility due-date list for all properties",
+      "fields": {
+        "owner": "Bills"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 14,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "crown-realtor-keys-photos",
+      "nodeId": "s-crown-leasing",
+      "status": "b-re-review",
+      "title": "Realtor follow-up on keys and photos",
+      "fields": {
+        "owner": "Leasing"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Leasing",
+      "lastEditedBy": "Leasing",
+      "order": 15,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "general-bot-team-setup",
+      "nodeId": "s-general-tasks",
+      "status": "b-re-done",
+      "title": "MRE bot team set up (Triage, Leasing, Maintenance, Vendors, Bills)",
+      "fields": {
+        "owner": "KV"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "kv",
+      "lastEditedBy": "kv",
+      "order": 16,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "general-voice-gmail-connected",
+      "nodeId": "s-general-tasks",
+      "status": "b-re-done",
+      "title": "Google Voice and Mills Realty Gmail connected",
+      "fields": {
+        "owner": "KV"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "kv",
+      "lastEditedBy": "kv",
+      "order": 17,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-xfinity-restored",
+      "nodeId": "s-mohawk-bills",
+      "status": "b-re-done",
+      "title": "Xfinity service restored",
+      "fields": {
+        "owner": "Bills"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 18,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "plum-dryer-repair-paid",
+      "nodeId": "s-plum-bills",
+      "status": "b-re-done",
+      "title": "Dryer repair paid",
+      "fields": {
+        "owner": "Bills"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 19,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "mohawk-jb-lawn-paid",
+      "nodeId": "s-mohawk-bills",
+      "status": "b-re-done",
+      "title": "J&B Lawn paid",
+      "fields": {
+        "owner": "Bills"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 20,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "college-lawn-paid",
+      "nodeId": "s-college-bills",
+      "status": "b-re-done",
+      "title": "Lawn service paid",
+      "fields": {
+        "owner": "Bills"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "order": 21,
+      "createdAt": "2026-09-26T15:00:00-05:00",
+      "updatedAt": "2026-09-26T15:00:00-05:00"
+    }
+  ],
+  "deleted": []
+}
