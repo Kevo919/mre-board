@@ -21,7 +21,16 @@
       "order": 0,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53"
+      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+      "activity": [
+        {
+          "id": "seed-echo-b-city-reinspection",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Created by MRE Maintenance & Work Orders"
+        }
+      ]
     },
     {
       "id": "echo-b-extension-in-writing",
@@ -42,7 +51,16 @@
       "order": 1,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53"
+      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+      "activity": [
+        {
+          "id": "seed-echo-b-extension-in-writing",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Created by MRE Maintenance & Work Orders"
+        }
+      ]
     },
     {
       "id": "echo-plumber-water-bill",
@@ -62,7 +80,16 @@
       "order": 2,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53"
+      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+      "activity": [
+        {
+          "id": "seed-echo-plumber-water-bill",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Created by MRE Maintenance & Work Orders"
+        }
+      ]
     },
     {
       "id": "red-maple-overdue-invoices",
@@ -85,7 +112,16 @@
       "order": 3,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348"
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "activity": [
+        {
+          "id": "seed-red-maple-overdue-invoices",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Created by MRE Vendors"
+        }
+      ]
     },
     {
       "id": "general-contractor-zelle",
@@ -105,7 +141,16 @@
       "order": 4,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348"
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "activity": [
+        {
+          "id": "seed-general-contractor-zelle",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Created by MRE Vendors"
+        }
+      ]
     },
     {
       "id": "general-sheriff-form",
@@ -125,7 +170,16 @@
       "order": 5,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5"
+      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+      "activity": [
+        {
+          "id": "seed-general-sheriff-form",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+          "actorName": "MRE Triage",
+          "action": "Created by MRE Triage"
+        }
+      ]
     },
     {
       "id": "mohawk-insurance-claim",
@@ -146,7 +200,16 @@
       "order": 6,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5"
+      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+      "activity": [
+        {
+          "id": "seed-mohawk-insurance-claim",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+          "actorName": "MRE Triage",
+          "action": "Created by MRE Triage"
+        }
+      ]
     },
     {
       "id": "mohawk-pro-builders-quote",
@@ -166,7 +229,16 @@
       "order": 7,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348"
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "activity": [
+        {
+          "id": "seed-mohawk-pro-builders-quote",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Created by MRE Vendors"
+        }
+      ]
     },
     {
       "id": "echo-wm-invoice-check",
@@ -187,7 +259,16 @@
       "order": 8,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-echo-wm-invoice-check",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     },
     {
       "id": "mohawk-list-openings",
@@ -207,7 +288,16 @@
       "order": 9,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98"
+      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
+      "activity": [
+        {
+          "id": "seed-mohawk-list-openings",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Created by MRE Leasing & Vacancies"
+        }
+      ]
     },
     {
       "id": "college-property-details",
@@ -227,7 +317,16 @@
       "order": 10,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5"
+      "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+      "activity": [
+        {
+          "id": "seed-college-property-details",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+          "actorName": "MRE Triage",
+          "action": "Created by MRE Triage"
+        }
+      ]
     },
     {
       "id": "echo-a-drywall-moisture",
@@ -248,7 +347,16 @@
       "order": 11,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53"
+      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+      "activity": [
+        {
+          "id": "seed-echo-a-drywall-moisture",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Created by MRE Maintenance & Work Orders"
+        }
+      ]
     },
     {
       "id": "crown-turnover-oct1",
@@ -268,7 +376,16 @@
       "order": 12,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98"
+      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
+      "activity": [
+        {
+          "id": "seed-crown-turnover-oct1",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Created by MRE Leasing & Vacancies"
+        }
+      ]
     },
     {
       "id": "mohawk-porch-estimate",
@@ -288,7 +405,16 @@
       "order": 13,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348"
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "activity": [
+        {
+          "id": "seed-mohawk-porch-estimate",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Created by MRE Vendors"
+        }
+      ]
     },
     {
       "id": "general-due-date-list",
@@ -308,7 +434,16 @@
       "order": 14,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-general-due-date-list",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     },
     {
       "id": "crown-realtor-keys-photos",
@@ -328,7 +463,16 @@
       "order": 15,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98"
+      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
+      "activity": [
+        {
+          "id": "seed-crown-realtor-keys-photos",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Created by MRE Leasing & Vacancies"
+        }
+      ]
     },
     {
       "id": "general-bot-team-setup",
@@ -348,7 +492,16 @@
       "order": 16,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+      "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
+      "activity": [
+        {
+          "id": "seed-general-bot-team-setup",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
+          "actorName": "Grok Bot",
+          "action": "Created by Grok Bot"
+        }
+      ]
     },
     {
       "id": "general-voice-gmail-connected",
@@ -368,7 +521,16 @@
       "order": 17,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+      "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
+      "activity": [
+        {
+          "id": "seed-general-voice-gmail-connected",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
+          "actorName": "Grok Bot",
+          "action": "Created by Grok Bot"
+        }
+      ]
     },
     {
       "id": "mohawk-xfinity-restored",
@@ -388,7 +550,16 @@
       "order": 18,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-mohawk-xfinity-restored",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     },
     {
       "id": "plum-dryer-repair-paid",
@@ -408,7 +579,16 @@
       "order": 19,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-plum-dryer-repair-paid",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     },
     {
       "id": "mohawk-jb-lawn-paid",
@@ -428,7 +608,16 @@
       "order": 20,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-mohawk-jb-lawn-paid",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     },
     {
       "id": "college-lawn-paid",
@@ -448,7 +637,16 @@
       "order": 21,
       "createdAt": "2026-09-26T15:00:00-05:00",
       "updatedAt": "2026-09-26T15:44:24-05:00",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22"
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "activity": [
+        {
+          "id": "seed-college-lawn-paid",
+          "ts": "2026-09-26T15:00:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Created by MRE Bills & Payments"
+        }
+      ]
     }
   ],
   "deleted": []
