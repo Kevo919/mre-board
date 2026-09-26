@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#111418" media="(prefers-color-scheme: dark)">
 <title>MRE Work Board</title>
 <link rel="stylesheet" href="app.css">
+<script>try{var t=localStorage.getItem("mre.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body>
 <a class="skip" href="#view">Skip to board</a>
@@ -34,8 +35,11 @@
         <h1>MRE Work Board</h1>
         <div class="scope-label" id="scopeLabel">All</div>
       </div>
+      <div class="ws-bar" id="wsBar"></div>
       <span id="syncStatus" class="sync" role="status" aria-live="polite"></span>
       <button class="btn primary" id="addCardBtn" aria-label="Add card"><span aria-hidden="true">＋</span><span class="hide-sm"> Add card</span></button>
+      <button class="btn primary add-more" id="addMenuBtn" aria-label="More add options (idea, workspace)" aria-haspopup="menu" title="Add idea, workspace…">▾</button>
+      <button class="icon-btn" id="themeBtn" aria-label="Theme" title="Theme"></button>
       <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙</button>
     </header>
     <nav id="viewTabs" class="tabs" role="tablist" aria-label="Views"></nav>
