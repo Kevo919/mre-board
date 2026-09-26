@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updated": "2026-09-26T15:44:24-05:00",
+  "updated": "2026-09-26T16:01:04-05:00",
   "items": [
     {
       "id": "echo-b-city-reinspection",
@@ -9,7 +9,11 @@
       "title": "City reinspection Wed Oct 14, 2:30 PM",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Post notice on the door and confirm tenant access."
+        "notes": "Post notice on the door and confirm tenant access.",
+        "actionType": [
+          "physical",
+          "sms"
+        ]
       },
       "start": null,
       "due": "2026-10-14",
@@ -20,7 +24,7 @@
       "lastEditedBy": "Maintenance",
       "order": 0,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -39,7 +43,10 @@
       "title": "Confirm in writing the city's Nov 20 extension",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Extension covers wall water damage and drywall."
+        "notes": "Extension covers wall water damage and drywall.",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -50,7 +57,7 @@
       "lastEditedBy": "Maintenance",
       "order": 1,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -68,7 +75,11 @@
       "status": "b-re-todo",
       "title": "Plumber access to all units to investigate high water bill",
       "fields": {
-        "owner": "Maintenance"
+        "owner": "Maintenance",
+        "actionType": [
+          "physical",
+          "sms"
+        ]
       },
       "start": null,
       "due": null,
@@ -79,7 +90,7 @@
       "lastEditedBy": "Maintenance",
       "order": 2,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -98,7 +109,10 @@
       "title": "Red Maple Landscaping overdue invoices (Echo + Plum)",
       "fields": {
         "owner": "Vendors",
-        "notes": "Covers both Echo and Plum."
+        "notes": "Covers both Echo and Plum.",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-09-22",
@@ -111,7 +125,7 @@
       "lastEditedBy": "Vendors",
       "order": 3,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -129,7 +143,10 @@
       "status": "b-re-todo",
       "title": "Pay or resolve repair contractor's pending Zelle request",
       "fields": {
-        "owner": "Vendors"
+        "owner": "Vendors",
+        "actionType": [
+          "sms"
+        ]
       },
       "start": null,
       "due": null,
@@ -140,7 +157,7 @@
       "lastEditedBy": "Vendors",
       "order": 4,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -158,7 +175,10 @@
       "status": "b-re-todo",
       "title": "File signed Sheriff form for eviction case with Cook County Sheriff",
       "fields": {
-        "owner": "KV"
+        "owner": "KV",
+        "actionType": [
+          "physical"
+        ]
       },
       "start": null,
       "due": null,
@@ -169,7 +189,7 @@
       "lastEditedBy": "kv",
       "order": 5,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
       "activity": [
         {
@@ -188,7 +208,10 @@
       "title": "Insurance claim follow-up",
       "fields": {
         "owner": "KV",
-        "notes": "Response window lapsed around Sep 21."
+        "notes": "Response window lapsed around Sep 21.",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-09-21",
@@ -199,7 +222,7 @@
       "lastEditedBy": "kv",
       "order": 6,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
       "activity": [
         {
@@ -217,7 +240,10 @@
       "status": "b-re-todo",
       "title": "Review Pro Builders quote",
       "fields": {
-        "owner": "Vendors"
+        "owner": "Vendors",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -228,7 +254,7 @@
       "lastEditedBy": "Vendors",
       "order": 7,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -247,7 +273,10 @@
       "title": "Check whether the WM waste invoice is a mistake",
       "fields": {
         "owner": "Bills",
-        "notes": "Service was switched to Groot."
+        "notes": "Service was switched to Groot.",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -258,7 +287,7 @@
       "lastEditedBy": "Bills",
       "order": 8,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -276,7 +305,10 @@
       "status": "b-re-todo",
       "title": "List upcoming openings",
       "fields": {
-        "owner": "Leasing"
+        "owner": "Leasing",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -287,7 +319,7 @@
       "lastEditedBy": "Leasing",
       "order": 9,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
       "activity": [
         {
@@ -305,7 +337,10 @@
       "status": "b-re-todo",
       "title": "Add property details and tenant roster",
       "fields": {
-        "owner": "KV"
+        "owner": "KV",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -316,7 +351,7 @@
       "lastEditedBy": "kv",
       "order": 10,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
       "activity": [
         {
@@ -335,7 +370,11 @@
       "title": "Water and saturated drywall near toilet",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Moisture check; need access to the unit above."
+        "notes": "Moisture check; need access to the unit above.",
+        "actionType": [
+          "physical",
+          "sms"
+        ]
       },
       "start": null,
       "due": null,
@@ -346,7 +385,7 @@
       "lastEditedBy": "Maintenance",
       "order": 11,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -364,7 +403,10 @@
       "status": "b-re-inprogress",
       "title": "Vacant Oct 1: turnover and listing prep",
       "fields": {
-        "owner": "Leasing"
+        "owner": "Leasing",
+        "actionType": [
+          "physical"
+        ]
       },
       "start": null,
       "due": "2026-10-01",
@@ -375,7 +417,7 @@
       "lastEditedBy": "Leasing",
       "order": 12,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
       "activity": [
         {
@@ -393,7 +435,11 @@
       "status": "b-re-inprogress",
       "title": "Porch estimate with handyman",
       "fields": {
-        "owner": "Vendors"
+        "owner": "Vendors",
+        "actionType": [
+          "physical",
+          "sms"
+        ]
       },
       "start": null,
       "due": null,
@@ -404,7 +450,7 @@
       "lastEditedBy": "Vendors",
       "order": 13,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -422,7 +468,10 @@
       "status": "b-re-inprogress",
       "title": "Build mortgage and utility due-date list for all properties",
       "fields": {
-        "owner": "Bills"
+        "owner": "Bills",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -433,7 +482,7 @@
       "lastEditedBy": "Bills",
       "order": 14,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -451,7 +500,11 @@
       "status": "b-re-review",
       "title": "Realtor follow-up on keys and photos",
       "fields": {
-        "owner": "Leasing"
+        "owner": "Leasing",
+        "actionType": [
+          "sms",
+          "physical"
+        ]
       },
       "start": null,
       "due": null,
@@ -462,7 +515,7 @@
       "lastEditedBy": "Leasing",
       "order": 15,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
       "activity": [
         {
@@ -480,7 +533,10 @@
       "status": "b-re-done",
       "title": "MRE bot team set up (Triage, Leasing, Maintenance, Vendors, Bills)",
       "fields": {
-        "owner": "KV"
+        "owner": "KV",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -491,7 +547,7 @@
       "lastEditedBy": "kv",
       "order": 16,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
       "activity": [
         {
@@ -509,7 +565,11 @@
       "status": "b-re-done",
       "title": "Google Voice and Mills Realty Gmail connected",
       "fields": {
-        "owner": "KV"
+        "owner": "KV",
+        "actionType": [
+          "email",
+          "sms"
+        ]
       },
       "start": null,
       "due": null,
@@ -520,7 +580,7 @@
       "lastEditedBy": "kv",
       "order": 17,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "7bffe639-ea47-4063-b8a3-73520f9a3f2a",
       "activity": [
         {
@@ -538,7 +598,10 @@
       "status": "b-re-done",
       "title": "Xfinity service restored",
       "fields": {
-        "owner": "Bills"
+        "owner": "Bills",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -549,7 +612,7 @@
       "lastEditedBy": "Bills",
       "order": 18,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -567,7 +630,10 @@
       "status": "b-re-done",
       "title": "Dryer repair paid",
       "fields": {
-        "owner": "Bills"
+        "owner": "Bills",
+        "actionType": [
+          "physical"
+        ]
       },
       "start": null,
       "due": null,
@@ -578,7 +644,7 @@
       "lastEditedBy": "Bills",
       "order": 19,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -596,7 +662,10 @@
       "status": "b-re-done",
       "title": "J&B Lawn paid",
       "fields": {
-        "owner": "Bills"
+        "owner": "Bills",
+        "actionType": [
+          "physical"
+        ]
       },
       "start": null,
       "due": null,
@@ -607,7 +676,7 @@
       "lastEditedBy": "Bills",
       "order": 20,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -625,7 +694,10 @@
       "status": "b-re-done",
       "title": "Lawn service paid",
       "fields": {
-        "owner": "Bills"
+        "owner": "Bills",
+        "actionType": [
+          "physical"
+        ]
       },
       "start": null,
       "due": null,
@@ -636,7 +708,7 @@
       "lastEditedBy": "Bills",
       "order": 21,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T15:44:24-05:00",
+      "updatedAt": "2026-09-26T16:01:04-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
