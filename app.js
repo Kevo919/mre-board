@@ -1275,10 +1275,15 @@ function itemList(list, empty) {
   return list.length ? h('ul', { class: 'list' }, list.map((it) => h('li', null, h('button', { onClick: () => openCard(it.id) }, dueBadge(it), locChip(it), h('span', null, it.title))))) : h('div', { class: 'empty' }, empty);
 }
 /* ---------------- Calendar ---------------- */
-/* Calendar "Bills" chip (per device): only cards filed in a Bills section (any level), shown as bill due-date markers. */
+/* Calendar "All cards | Bills" segmented control (per device, default All cards). A bill = fields.owner "Bills", or the
+ * MRE Bills & Payments bot's card, or filed in a section named Bills, or an id starting "bill-". Bill markers use #ca8a04;
+ * open bills due within 3 days or overdue get a red accent. */
+const BILLS_BOT = '62cbcc0d-ba22-4956-9857-05551978ce22', BILL_COLOR = '#ca8a04';
 const CAL_BILLS_KEY = 'mre.cal.bills';
 function calBillsOn() { try { return localStorage.getItem(CAL_BILLS_KEY) === '1'; } catch { return false; } }
-function isBillItem(it) { return ancestors(it.nodeId).some((n) => /^bills?$/i.test(String(n.name).trim())); }
+function isBillItem(it) { return (it.fields && it.fields.owner === 'Bills') || it.agent === BILLS_BOT || /^bill-/.test(it.id) || ancestors(it.nodeId).some((n) => /^bills?$/i.test(String(n.name).trim())); }
+function billUrgent(it) { return !!it.due && !isDone(it) && it.due <= addDays(todayStr(), 3); }
+function setCalBills(on) { try { localStorage.setItem(CAL_BILLS_KEY, on ? '1' : '0'); } catch {} UI.calDay = null; renderView(); }
 function renderCalendar(v, items) {
   const billsOn = calBillsOn(); if (billsOn) items = items.filter(isBillItem);
   const month = UI.calMonth || todayStr().slice(0, 7); const [y, m] = month.split('-').map(Number);
@@ -1290,16 +1295,18 @@ function renderCalendar(v, items) {
   v.append(h('div', { class: 'cal-head' }, h('button', { class: 'icon-btn', 'aria-label': 'Previous month', id: 'calPrev', onClick: () => shift(-1) }, '‹'),
     h('h2', { 'aria-live': 'polite' }, new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' })),
     h('button', { class: 'icon-btn', 'aria-label': 'Next month', id: 'calNext', onClick: () => shift(1) }, '›'), h('button', { class: 'btn small', onClick: () => { UI.calMonth = null; UI.calDay = todayStr(); render(); } }, 'Today'),
-    h('button', { class: 'chip cal-bills', id: 'calBills', 'aria-pressed': String(billsOn), style: { '--chip': '#ca8a04' }, title: billsOn ? 'Showing only cards in Bills sections — click to show everything' : 'Show only cards in Bills sections', onClick: () => { try { localStorage.setItem(CAL_BILLS_KEY, billsOn ? '0' : '1'); } catch {} UI.calDay = null; renderView(); } }, h('span', { class: 'at-chip-ico' }, atIcon('bill')), 'Bills'),
-    billsOn ? h('span', { class: 'meta-line', id: 'calBillsNote' }, (() => { const end = addDays(gridStart, weeks * 7 - 1); const n = items.filter((i) => i.due && i.due >= gridStart && i.due <= end).length; return `${n} bill${n === 1 ? '' : 's'} due in view · Bills sections only`; })()) : null));
+    h('div', { class: 'seg cal-mode', role: 'group', 'aria-label': 'Show on calendar' },
+      h('button', { class: 'btn small', id: 'calModeAll', dataset: { calMode: 'all' }, 'aria-pressed': String(!billsOn), onClick: () => billsOn && setCalBills(false) }, 'All cards'),
+      h('button', { class: 'btn small cal-bills', id: 'calModeBills', dataset: { calMode: 'bills' }, 'aria-pressed': String(billsOn), title: 'Only bills: Bills owner, the Bills bot, or a Bills section', onClick: () => !billsOn && setCalBills(true) }, atIcon('bill'), 'Bills')),
+    billsOn ? h('span', { class: 'meta-line', id: 'calBillsNote' }, (() => { const end = addDays(gridStart, weeks * 7 - 1); const n = items.filter((i) => i.due && i.due >= gridStart && i.due <= end).length; return `${n} bill${n === 1 ? '' : 's'} due in view` + (items.some((i) => billUrgent(i) && i.due >= gridStart && i.due <= end) ? ' · red = due within 3 days or overdue' : ''); })()) : null));
   const cal = h('div', { class: 'cal' + (narrow ? ' mini' : ''), role: 'grid', 'aria-label': 'Month' }, ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => h('div', { class: 'dow', role: 'columnheader' }, narrow ? d[0] : d)));
   for (let k = 0; k < weeks * 7; k++) {
     const ds = addDays(gridStart, k); const list = (byDay.get(ds) || []).sort((a, b) => isDone(a) - isDone(b));
     const cls = 'day' + (ds.slice(0, 7) !== month ? ' other' : '') + (ds === todayStr() ? ' today' : '') + (UI.calDay === ds ? ' sel' : '');
     cal.append(h('button', { class: cls, role: 'gridcell', dataset: { day: ds }, 'aria-label': `${fmtDate(ds, { weekday: 'long', month: 'long', day: 'numeric' })}, ${list.length} cards`, onClick: () => { UI.calDay = UI.calDay === ds ? null : ds; renderView(); } },
       h('span', { class: 'dnum' }, Number(ds.slice(8))),
-      narrow ? h('span', { class: 'dots' }, list.slice(0, 4).map((i) => billsOn ? h('i', { class: 'bill-dot', style: { '--pc': nodeColor(i.nodeId) } }, atIcon('bill')) : h('i', { style: { '--pc': nodeColor(i.nodeId) } }))) :
-        [list.slice(0, 3).map((i) => h('span', { class: 'cal-pill' + (isDone(i) ? ' done' : '') + (billsOn ? ' bill' : ''), style: { '--pc': nodeColor(i.nodeId) }, title: billsOn ? 'Bill due: ' + i.title : null }, billsOn ? atIcon('bill') : null, i.title)), list.length > 3 ? h('span', { class: 'cal-more' }, `+${list.length - 3} more`) : null]));
+      narrow ? h('span', { class: 'dots' }, list.slice(0, 4).map((i) => billsOn ? h('i', { class: 'bill-dot' + (billUrgent(i) ? ' urgent' : ''), style: { '--pc': BILL_COLOR } }, atIcon('bill')) : h('i', { style: { '--pc': nodeColor(i.nodeId) } }))) :
+        [list.slice(0, 3).map((i) => h('span', { class: 'cal-pill' + (isDone(i) ? ' done' : '') + (billsOn ? ' bill' + (billUrgent(i) ? ' urgent' : '') : ''), style: { '--pc': billsOn ? BILL_COLOR : nodeColor(i.nodeId) }, title: billsOn ? (billUrgent(i) ? (i.due < todayStr() ? 'Overdue bill: ' : 'Bill due soon: ') : 'Bill due: ') + i.title : null }, billsOn ? atIcon('bill') : null, i.title)), list.length > 3 ? h('span', { class: 'cal-more' }, `+${list.length - 3} more`) : null]));
   }
   v.append(cal);
   const panel = h('div', { class: 'day-panel' });
@@ -2193,7 +2200,7 @@ async function init() {
     saveMeta();
   } else if (!WS) { const m = migrate(null, null); WS = m.ws; IT = m.items; toast('Could not load board data; starting empty.'); }
   reindex(); saveLocal(); render(); scheduleSync(1000);
-  window.MRE = { get ws() { return WS; }, get items() { return IT; }, get ui() { return UI; }, migrate, mergeItemsDocs, updateItem, mergeWSDocs, render, setSync, curWS, switchWorkspace, assistantLink, cardBot, cardLink, visibleViews, getWidgets, defaultWidgets, tokTotal, blockers, isIdeaItem, promoteToTask, addIdea, getTheme, setTheme, get sync() { return { ...SYNC, meta: META }; } };
+  window.MRE = { get ws() { return WS; }, get items() { return IT; }, get ui() { return UI; }, migrate, mergeItemsDocs, updateItem, mergeWSDocs, render, setSync, curWS, switchWorkspace, assistantLink, cardBot, cardLink, visibleViews, getWidgets, defaultWidgets, tokTotal, blockers, isIdeaItem, promoteToTask, addIdea, getTheme, setTheme, isBillItem, billUrgent, get sync() { return { ...SYNC, meta: META }; } };
 }
 init();
 })();
