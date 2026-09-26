@@ -279,3 +279,64 @@ table.grid{border-collapse:separate;border-spacing:0;min-width:100%;font-size:14
   .grid-wrap,.tl-wrap{max-height:calc(100vh - 250px)}
   .sync{max-width:92px;overflow:hidden;text-overflow:ellipsis}
 }
+
+/* ---------- Edge light for active cards (bucket flagged isActive, e.g. In Progress) ---------- */
+@property --edge-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.card.is-active, .gcard.is-active {
+  --ac: var(--accent);
+  border-color: transparent;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 22%, transparent), 0 0 14px -4px color-mix(in srgb, var(--ac) 55%, transparent), var(--shadow);
+}
+.card.is-active::before, .gcard.is-active::before {
+  content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 2px; pointer-events: none; z-index: 1;
+  /* dim ring + a brighter segment that travels around the edge */
+  background: conic-gradient(from var(--edge-angle),
+    color-mix(in srgb, var(--ac) 30%, transparent) 0deg,
+    color-mix(in srgb, var(--ac) 30%, transparent) 240deg,
+    color-mix(in srgb, var(--ac) 85%, transparent) 300deg,
+    color-mix(in srgb, var(--ac) 55%, white) 332deg,
+    var(--ac) 348deg,
+    color-mix(in srgb, var(--ac) 30%, transparent) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: edge-spin 3.5s linear infinite;
+}
+.gcard.is-active { position: relative; }
+.gcard.is-active::before { inset: 0; }
+@keyframes edge-spin { to { --edge-angle: 360deg; } }
+@media (prefers-color-scheme: dark) {
+  .card.is-active, .gcard.is-active { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 30%, transparent), 0 0 18px -4px color-mix(in srgb, var(--ac) 70%, transparent); }
+}
+/* Reduced motion: static glow instead of the travelling light */
+@media (prefers-reduced-motion: reduce) {
+  .card.is-active::before, .gcard.is-active::before {
+    animation: none;
+    background: color-mix(in srgb, var(--ac) 75%, transparent);
+  }
+}
+/* Dragging ghost keeps it static */
+.drag-ghost.is-active::before { animation: none; }
+
+/* Grid: pulsing dot next to an active status */
+.status-wrap { display: inline-flex; align-items: center; gap: 6px; }
+.live-dot { --ac: var(--accent); width: 8px; height: 8px; border-radius: 50%; background: var(--ac); display: inline-block; position: relative; flex: 0 0 8px; }
+.live-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--ac); animation: live-pulse 1.8s ease-out infinite; }
+@keyframes live-pulse { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(2.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .live-dot::after { animation: none; opacity: .35; transform: scale(1.8); } }
+
+/* Bot chip + tooltip */
+.bot-chip { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; border-radius: 99px; padding: 1px 8px 1px 6px; text-decoration: none; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); position: relative; line-height: 1.5; min-height: 22px; }
+.bot-chip:hover, .bot-chip:focus-visible { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+@media (hover: hover) and (pointer: fine) {
+  .bot-chip[data-tip]:hover::after, .bot-chip[data-tip]:focus-visible::after {
+    content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap; z-index: 50;
+    background: #1f2937; color: #fff; font-size: 12px; padding: 5px 8px; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.25); pointer-events: none;
+  }
+}
+@media (pointer: coarse) { .bot-chip { min-height: 28px; padding: 2px 10px 2px 8px; } }
+.bot-box { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--panel2); }
+.bot-box .form-grid { margin-bottom: 10px; }
+.bot-open { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.open-bot { text-decoration: none; }
+.bot-name { white-space: nowrap; }
