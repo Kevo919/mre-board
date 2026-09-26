@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "name": "MRE Work Board",
-  "updated": "2026-09-26T16:01:02-05:00",
+  "updated": "2026-09-26T17:01:38-05:00",
   "nodes": [
     {
       "id": "d-re",
@@ -402,6 +402,26 @@
       "order": 39,
       "archived": false,
       "updatedAt": "2026-09-26T15:00:00-05:00"
+    },
+    {
+      "id": "d-career",
+      "parentId": null,
+      "type": "domain",
+      "name": "Career",
+      "color": "#0d9488",
+      "order": 3,
+      "archived": false,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "d-coding",
+      "parentId": null,
+      "type": "domain",
+      "name": "Coding",
+      "color": "#9333ea",
+      "order": 4,
+      "archived": false,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
     }
   ],
   "buckets": [
@@ -524,6 +544,146 @@
       "order": 3,
       "updatedAt": "2026-09-26T15:44:21-05:00",
       "isActive": false
+    },
+    {
+      "id": "b-career-ideas",
+      "domainId": "d-career",
+      "name": "Ideas",
+      "color": "#eab308",
+      "isDone": false,
+      "isActive": false,
+      "isIdea": true,
+      "icon": "bulb",
+      "order": -1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-career-todo",
+      "domainId": "d-career",
+      "name": "To Do",
+      "color": "#64748b",
+      "isDone": false,
+      "isActive": false,
+      "order": 0,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-career-inprogress",
+      "domainId": "d-career",
+      "name": "In Progress",
+      "color": "#2563eb",
+      "isDone": false,
+      "isActive": true,
+      "order": 1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-career-review",
+      "domainId": "d-career",
+      "name": "In Review",
+      "color": "#d97706",
+      "isDone": false,
+      "isActive": false,
+      "order": 2,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-career-done",
+      "domainId": "d-career",
+      "name": "Done",
+      "color": "#16a34a",
+      "isDone": true,
+      "isActive": false,
+      "order": 3,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-coding-ideas",
+      "domainId": "d-coding",
+      "name": "Ideas",
+      "color": "#eab308",
+      "isDone": false,
+      "isActive": false,
+      "isIdea": true,
+      "icon": "bulb",
+      "order": -1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-coding-todo",
+      "domainId": "d-coding",
+      "name": "To Do",
+      "color": "#64748b",
+      "isDone": false,
+      "isActive": false,
+      "order": 0,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-coding-inprogress",
+      "domainId": "d-coding",
+      "name": "In Progress",
+      "color": "#2563eb",
+      "isDone": false,
+      "isActive": true,
+      "order": 1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-coding-review",
+      "domainId": "d-coding",
+      "name": "In Review",
+      "color": "#d97706",
+      "isDone": false,
+      "isActive": false,
+      "order": 2,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-coding-done",
+      "domainId": "d-coding",
+      "name": "Done",
+      "color": "#16a34a",
+      "isDone": true,
+      "isActive": false,
+      "order": 3,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-re-ideas",
+      "domainId": "d-re",
+      "name": "Ideas",
+      "color": "#eab308",
+      "isDone": false,
+      "isActive": false,
+      "isIdea": true,
+      "icon": "bulb",
+      "order": -1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-home-ideas",
+      "domainId": "d-home",
+      "name": "Ideas",
+      "color": "#eab308",
+      "isDone": false,
+      "isActive": false,
+      "isIdea": true,
+      "icon": "bulb",
+      "order": -1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "b-personal-ideas",
+      "domainId": "d-personal",
+      "name": "Ideas",
+      "color": "#eab308",
+      "isDone": false,
+      "isActive": false,
+      "isIdea": true,
+      "icon": "bulb",
+      "order": -1,
+      "updatedAt": "2026-09-26T17:01:38-05:00"
     }
   ],
   "fields": [
@@ -575,7 +735,7 @@
       "type": "multi-select",
       "builtin": true,
       "order": 0.5,
-      "updatedAt": "2026-09-26T16:00:00-05:00",
+      "updatedAt": "2026-09-26T17:01:38-05:00",
       "options": [
         {
           "id": "physical",
@@ -594,6 +754,206 @@
           "name": "SMS",
           "color": "#059669",
           "icon": "chat"
+        },
+        {
+          "id": "coding",
+          "name": "Coding",
+          "color": "#9333ea",
+          "icon": "code"
+        }
+      ]
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "cardType",
+      "name": "Card type",
+      "type": "single-select",
+      "order": 0.4,
+      "options": [
+        {
+          "id": "task",
+          "name": "Task",
+          "color": "#475569",
+          "icon": "task"
+        },
+        {
+          "id": "idea",
+          "name": "Idea",
+          "color": "#eab308",
+          "icon": "bulb"
+        },
+        {
+          "id": "coding",
+          "name": "Coding task",
+          "color": "#9333ea",
+          "icon": "code"
+        }
+      ]
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "tokensIn",
+      "name": "Tokens in",
+      "type": "number",
+      "group": "metrics",
+      "order": 50
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "tokensOut",
+      "name": "Tokens out",
+      "type": "number",
+      "group": "metrics",
+      "order": 51
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "tokensTotal",
+      "name": "Tokens total",
+      "type": "number",
+      "group": "metrics",
+      "order": 52,
+      "help": "Blank = tokens in + out"
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "model",
+      "name": "Model",
+      "type": "text",
+      "group": "metrics",
+      "order": 53
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "runs",
+      "name": "Runs / attempts",
+      "type": "number",
+      "group": "metrics",
+      "order": 54
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "durationMinutes",
+      "name": "Duration (min)",
+      "type": "number",
+      "group": "metrics",
+      "order": 55
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "repo",
+      "name": "Repo",
+      "type": "text",
+      "group": "coding",
+      "order": 60
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "branch",
+      "name": "Branch",
+      "type": "text",
+      "group": "coding",
+      "order": 61
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "prUrl",
+      "name": "PR / issue URL",
+      "type": "url",
+      "group": "coding",
+      "order": 62
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "agentTool",
+      "name": "Agent tool",
+      "type": "single-select",
+      "group": "coding",
+      "order": 63,
+      "options": [
+        {
+          "id": "cursor",
+          "name": "Cursor",
+          "color": "#0f172a"
+        },
+        {
+          "id": "codex",
+          "name": "Codex",
+          "color": "#10a37f"
+        },
+        {
+          "id": "claude",
+          "name": "Claude",
+          "color": "#d97757"
+        },
+        {
+          "id": "chatgpt",
+          "name": "ChatGPT",
+          "color": "#0f766e"
+        },
+        {
+          "id": "deepseek",
+          "name": "DeepSeek",
+          "color": "#4d6bfe"
+        },
+        {
+          "id": "perplexity",
+          "name": "Perplexity",
+          "color": "#1f8a99"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "color": "#64748b"
+        }
+      ]
+    },
+    {
+      "domainId": null,
+      "builtin": true,
+      "updatedAt": "2026-09-26T17:01:38-05:00",
+      "id": "ciStatus",
+      "name": "CI status",
+      "type": "single-select",
+      "group": "coding",
+      "order": 64,
+      "options": [
+        {
+          "id": "pending",
+          "name": "Pending",
+          "color": "#d97706"
+        },
+        {
+          "id": "passing",
+          "name": "Passing",
+          "color": "#16a34a"
+        },
+        {
+          "id": "failing",
+          "name": "Failing",
+          "color": "#dc2626"
         }
       ]
     }
@@ -680,5 +1040,112 @@
       "link": "grokbot://app/v1/sidebar?agent=7bffe639-ea47-4063-b8a3-73520f9a3f2a&tab=overview",
       "updatedAt": "2026-09-26T15:44:21-05:00"
     }
-  ]
+  ],
+  "workspaces": [
+    {
+      "id": "all",
+      "name": "All workspaces",
+      "all": true,
+      "icon": "◎",
+      "color": "#475569",
+      "order": 0,
+      "assistant": {
+        "primary": {
+          "name": "Grok Bot",
+          "agentId": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        },
+        "bots": [
+          "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        ]
+      },
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "w-mre",
+      "name": "MRE",
+      "icon": "🏠",
+      "color": "#2563eb",
+      "order": 1,
+      "domainIds": [
+        "d-re"
+      ],
+      "assistant": {
+        "primary": {
+          "name": "MRE Triage",
+          "agentId": "14250373-92c8-4cfa-b12a-4d8b58cc0dd5"
+        },
+        "bots": [
+          "14250373-92c8-4cfa-b12a-4d8b58cc0dd5",
+          "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "62cbcc0d-ba22-4956-9857-05551978ce22"
+        ]
+      },
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "w-career",
+      "name": "Career",
+      "icon": "💼",
+      "color": "#0d9488",
+      "order": 2,
+      "domainIds": [
+        "d-career"
+      ],
+      "assistant": {
+        "primary": {
+          "name": "Grok Bot",
+          "agentId": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        },
+        "bots": [
+          "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        ]
+      },
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "w-coding",
+      "name": "Coding",
+      "icon": "⌨",
+      "color": "#9333ea",
+      "order": 3,
+      "domainIds": [
+        "d-coding"
+      ],
+      "coding": true,
+      "assistant": {
+        "primary": {
+          "name": "Grok Bot",
+          "agentId": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        },
+        "bots": [
+          "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        ]
+      },
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    },
+    {
+      "id": "w-personal",
+      "name": "Personal",
+      "icon": "🌿",
+      "color": "#16a34a",
+      "order": 4,
+      "domainIds": [
+        "d-personal",
+        "d-home"
+      ],
+      "assistant": {
+        "primary": {
+          "name": "Grok Bot",
+          "agentId": "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        },
+        "bots": [
+          "7bffe639-ea47-4063-b8a3-73520f9a3f2a"
+        ]
+      },
+      "updatedAt": "2026-09-26T17:01:38-05:00"
+    }
+  ],
+  "dashboards": {}
 }
