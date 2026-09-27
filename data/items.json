@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updated": "2026-09-26T21:10:53-05:00",
+  "updated": "2026-09-26T21:19:10-05:00",
   "items": [
     {
       "id": "echo-b-city-reinspection",
@@ -734,47 +734,14 @@
       "title": "ServiceMac / Lakeview mortgage due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: off. Has to be paid by hand. June late fee disputed Aug 3, outcome unknown; payments often land near or after the grace period. Property vacant from Oct 1. Escrow pays property tax and hazard insurance."
-      },
-      "start": null,
-      "due": "2026-10-01",
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 22,
-      "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-servicemac-general-mortgage-20260926164500",
-          "ts": "2026-09-26T16:45:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the bill calendar"
-        },
-        {
-          "id": "m-bill-servicemac-general-mortgage-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Filed under Bills; Updated details"
-        }
-      ]
-    },
-    {
-      "id": "bill-mtbank-general-mortgage",
-      "nodeId": "s-echo-bills",
-      "status": "b-re-todo",
-      "title": "M&T Bank mortgage due",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Echo mortgage (per Librarian records Sep 26). Autopay: unknown. Payment changed Aug 1 after escrow analysis; Oct payment not seen yet.",
+        "notes": "Autopay: off. Has to be paid by hand. June late fee disputed Aug 3, outcome unknown; payments often land near or after the grace period. Property vacant from Oct 1. Escrow pays property tax and hazard insurance.",
+        "billCompany": "ServiceMac",
+        "billType": "mortgage",
+        "autopay": "no",
+        "dueDate": "2026-10-01",
+        "estimated": false,
+        "gap": false,
+        "billStatus": "upcoming",
         "actionType": [
           "email"
         ]
@@ -790,9 +757,67 @@
       "lastEditedBy": "Bills",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "taskUrl": null,
+      "order": 22,
+      "createdAt": "2026-09-26T16:45:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-servicemac-general-mortgage-20260926164500",
+          "ts": "2026-09-26T16:45:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the bill calendar"
+        },
+        {
+          "id": "m-bill-servicemac-general-mortgage-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Filed under Bills; Updated details"
+        },
+        {
+          "id": "m-bill-servicemac-general-mortgage-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-mtbank-general-mortgage",
+      "nodeId": "s-echo-bills",
+      "status": "b-re-todo",
+      "title": "M&T Bank mortgage due",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Echo mortgage (per Librarian records Sep 26). Autopay: unknown. Payment changed Aug 1 after escrow analysis; Oct payment not seen yet.",
+        "actionType": [
+          "email"
+        ],
+        "billCompany": "M&T Bank",
+        "billType": "mortgage",
+        "autopay": "unknown",
+        "dueDate": "2026-10-01",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "autopay and new payment not in email",
+        "billStatus": "upcoming"
+      },
+      "start": null,
+      "due": "2026-10-01",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
       "order": 23,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T21:12:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-mtbank-general-mortgage-20260926164500",
@@ -814,6 +839,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Moved to Echo Bills: M&T is the Echo mortgage (Librarian records)"
+        },
+        {
+          "id": "m-bill-mtbank-general-mortgage-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -827,7 +859,15 @@
         "notes": "College mortgage since February (per Librarian records Sep 26). Autopay: unknown. Amount not shown in email. Due date estimated: payments applied around the 9th-14th (Jun 10, Aug 13, Sep 14). County tax paid from escrow Aug 19.",
         "actionType": [
           "email"
-        ]
+        ],
+        "billCompany": "Rocket Mortgage",
+        "billType": "mortgage",
+        "autopay": "unknown",
+        "dueDate": "2026-10-14",
+        "estimated": true,
+        "gap": true,
+        "gapReason": "details not in email",
+        "billStatus": "upcoming"
       },
       "start": null,
       "due": "2026-10-14",
@@ -842,7 +882,7 @@
       "taskUrl": null,
       "order": 24,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T21:12:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-rocket-general-mortgage-20260926164500",
@@ -871,6 +911,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Moved to College Bills: Rocket is the College mortgage (Librarian records)"
+        },
+        {
+          "id": "m-bill-rocket-general-mortgage-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -884,7 +931,14 @@
         "notes": "Plum mortgage (per Librarian records Sep 26). Due date unknown: not in email, login needed (payments usually post early in the month). Autopay: unknown. Serviced by Champion / Mr. Cooper. Escrow statement Sep 24; payment may change.",
         "actionType": [
           "email"
-        ]
+        ],
+        "billCompany": "CrossCountry Mortgage",
+        "billType": "mortgage",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "no due date",
+        "billStatus": "upcoming"
       },
       "start": null,
       "due": null,
@@ -899,7 +953,7 @@
       "taskUrl": null,
       "order": 25,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T21:12:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-crosscountry-general-mortgage-20260926164500",
@@ -914,6 +968,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Moved to Plum Bills: CrossCountry is the Plum mortgage (Librarian records)"
+        },
+        {
+          "id": "m-bill-crosscountry-general-mortgage-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -924,7 +985,17 @@
       "title": "Discover it Miles card payment due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: no. MRE card (confirmed by KV). Scheduled payment is far below the statement balance, so interest is likely."
+        "notes": "Autopay: no. MRE card (confirmed by KV). Scheduled payment is far below the statement balance, so interest is likely.",
+        "billCompany": "Discover",
+        "billType": "card",
+        "autopay": "no",
+        "dueDate": "2026-10-01",
+        "estimated": false,
+        "gap": false,
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-10-01",
@@ -939,7 +1010,7 @@
       "taskUrl": null,
       "order": 26,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:58:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-discover-general-creditcard-20260926164500",
@@ -961,6 +1032,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Updated details"
+        },
+        {
+          "id": "m-bill-discover-general-creditcard-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -971,7 +1049,17 @@
       "title": "ComEd electric due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: no. Paid late in Jun, Jul and Sep; a small late charge may show on the next bill. Due date estimated (next bill around Oct 1)."
+        "notes": "Autopay: no. Paid late in Jun, Jul and Sep; a small late charge may show on the next bill. Due date estimated (next bill around Oct 1).",
+        "billCompany": "ComEd",
+        "billType": "utility",
+        "autopay": "no",
+        "dueDate": "2026-10-19",
+        "estimated": true,
+        "gap": false,
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-10-19",
@@ -986,7 +1074,7 @@
       "taskUrl": null,
       "order": 27,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-comed-echo-electric-20260926164500",
@@ -1001,6 +1089,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Changed due date to 2026-10-19; Updated details"
+        },
+        {
+          "id": "m-bill-comed-echo-electric-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1011,7 +1106,17 @@
       "title": "ComEd electric (second account) due (date unknown)",
       "fields": {
         "owner": "Bills",
-        "notes": "Due date unknown: usage emails only, no statements. Autopay: unknown. Likely a personal residence (EV charging), maybe College; ask KV."
+        "notes": "Due date unknown: usage emails only, no statements. Autopay: unknown. Likely a personal residence (EV charging), maybe College; ask KV.",
+        "billCompany": "ComEd",
+        "billType": "utility",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "no statements; property unconfirmed",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -1026,7 +1131,7 @@
       "taskUrl": null,
       "order": 28,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-comed-general-electric-20260926164500",
@@ -1041,6 +1146,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Updated details"
+        },
+        {
+          "id": "m-bill-comed-general-electric-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1051,7 +1163,17 @@
       "title": "Nicor Gas due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: no. Paid manually online. Service address confirmed Mohawk."
+        "notes": "Autopay: no. Paid manually online. Service address confirmed Mohawk.",
+        "billCompany": "Nicor Gas",
+        "billType": "utility",
+        "autopay": "no",
+        "dueDate": "2026-10-12",
+        "estimated": false,
+        "gap": false,
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-10-12",
@@ -1066,7 +1188,7 @@
       "taskUrl": null,
       "order": 29,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-nicor-mohawk-gas-20260926164500",
@@ -1081,6 +1203,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Updated details"
+        },
+        {
+          "id": "m-bill-nicor-mohawk-gas-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1091,7 +1220,18 @@
       "title": "Nicor Gas (second account) due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: no. Paid manually through bank bill pay. History of late payment (Sep bill paid 3 days late). Property unknown: Echo, Plum, or College (ask KV)."
+        "notes": "Autopay: no. Paid manually through bank bill pay. History of late payment (Sep bill paid 3 days late). Property unknown: Echo, Plum, or College (ask KV).",
+        "billCompany": "Nicor Gas",
+        "billType": "utility",
+        "autopay": "no",
+        "dueDate": "2026-10-08",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "property unconfirmed",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-10-08",
@@ -1106,7 +1246,7 @@
       "taskUrl": null,
       "order": 30,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-nicor-general-gas-20260926164500",
@@ -1121,6 +1261,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Updated details"
+        },
+        {
+          "id": "m-bill-nicor-general-gas-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1131,7 +1278,18 @@
       "title": "Fox Metro WRD sewer due",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: no (manual online). Billed every 2 months; next bill around Oct 20, due date estimated. Amounts swing a lot between bills. Property most likely Echo."
+        "notes": "Autopay: no (manual online). Billed every 2 months; next bill around Oct 20, due date estimated. Amounts swing a lot between bills. Property most likely Echo.",
+        "billCompany": "Fox Metro Water Reclamation District",
+        "billType": "utility",
+        "autopay": "no",
+        "dueDate": "2026-11-09",
+        "estimated": true,
+        "gap": true,
+        "gapReason": "property unconfirmed (most likely Echo)",
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-11-09",
@@ -1146,7 +1304,7 @@
       "taskUrl": null,
       "order": 31,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-foxmetro-echo-sewer-20260926164500",
@@ -1161,6 +1319,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Changed due date to 2026-11-09; Updated details"
+        },
+        {
+          "id": "m-bill-foxmetro-echo-sewer-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1171,7 +1336,17 @@
       "title": "Groot waste (likely 1743 Plum)",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: yes (Aug 1 autopay approved). Billed quarterly; next invoice around Nov 1, due date not known. Service address not verified."
+        "notes": "Autopay: yes (Aug 1 autopay approved). Billed quarterly; next invoice around Nov 1, due date not known. Service address not verified.",
+        "billCompany": "Groot",
+        "billType": "waste",
+        "autopay": "yes",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "no due date; service address unverified",
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -1186,7 +1361,7 @@
       "taskUrl": null,
       "order": 32,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-groot-echo-waste-1-20260926164500",
@@ -1201,6 +1376,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Filed under Bills; Removed due date; Renamed card; Updated details"
+        },
+        {
+          "id": "m-bill-groot-echo-waste-1-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1211,7 +1393,17 @@
       "title": "Groot waste due (1745 Plum)",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: yes, but Aug 1 autopay was rejected (card limit) and paid Aug 3. Billed quarterly; next invoice around Nov 1, due date estimated."
+        "notes": "Autopay: yes, but Aug 1 autopay was rejected (card limit) and paid Aug 3. Billed quarterly; next invoice around Nov 1, due date estimated.",
+        "billCompany": "Groot",
+        "billType": "waste",
+        "autopay": "yes",
+        "dueDate": "2026-11-15",
+        "estimated": true,
+        "gap": false,
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-11-15",
@@ -1226,7 +1418,7 @@
       "taskUrl": null,
       "order": 33,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-groot-echo-waste-2-20260926164500",
@@ -1241,6 +1433,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Filed under Bills; Changed due date to 2026-11-15; Renamed card; Updated details"
+        },
+        {
+          "id": "m-bill-groot-echo-waste-2-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1251,7 +1450,17 @@
       "title": "WM waste invoice due (service ends Sep 28)",
       "fields": {
         "owner": "Bills",
-        "notes": "September invoice is valid: KV kept WM through Sep 28 to avoid an early-termination fee. Service ends Sep 28, container pickup Sep 29, final October invoice expected for removal. Due date not stated. Autopay: no; history of late payment."
+        "notes": "September invoice is valid: KV kept WM through Sep 28 to avoid an early-termination fee. Service ends Sep 28, container pickup Sep 29, final October invoice expected for removal. Due date not stated. Autopay: no; history of late payment.",
+        "billCompany": "WM",
+        "billType": "waste",
+        "autopay": "no",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "no due date",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -1266,7 +1475,7 @@
       "taskUrl": null,
       "order": 34,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-wm-echo-waste-20260926164500",
@@ -1281,6 +1490,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Renamed card; Updated details"
+        },
+        {
+          "id": "m-bill-wm-echo-waste-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1291,7 +1507,17 @@
       "title": "City of Crystal Lake water/sewer due (337 College)",
       "fields": {
         "owner": "Bills",
-        "notes": "Autopay: yes. Monthly bill around the 1st, due around the 21st (estimate). 20% late charge if late."
+        "notes": "Autopay: yes. Monthly bill around the 1st, due around the 21st (estimate). 20% late charge if late.",
+        "billCompany": "City of Crystal Lake",
+        "billType": "utility",
+        "autopay": "yes",
+        "dueDate": "2026-10-21",
+        "estimated": true,
+        "gap": false,
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": "2026-10-21",
@@ -1306,7 +1532,7 @@
       "taskUrl": null,
       "order": 35,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-crystallake-college-water-20260926164500",
@@ -1321,6 +1547,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Renamed card; Updated details"
+        },
+        {
+          "id": "m-bill-crystallake-college-water-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1331,7 +1564,17 @@
       "title": "LRS waste due (date unknown)",
       "fields": {
         "owner": "Bills",
-        "notes": "Waste service for 337 College. Last invoice Jul 25; no Aug or Sep invoices found. Due date not in email. Autopay: unknown."
+        "notes": "Waste service for 337 College. Last invoice Jul 25; no Aug or Sep invoices found. Due date not in email. Autopay: unknown.",
+        "billCompany": "LRS",
+        "billType": "waste",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "missing statements since July",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
       },
       "start": null,
       "due": null,
@@ -1346,7 +1589,7 @@
       "taskUrl": null,
       "order": 36,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:58:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-lrs-college-waste-20260926164500",
@@ -1368,6 +1611,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Updated details"
+        },
+        {
+          "id": "m-bill-lrs-college-waste-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     },
@@ -1378,238 +1628,14 @@
       "title": "Village of Park Forest water/sewer due (date unknown)",
       "fields": {
         "owner": "Bills",
-        "notes": "Due date unknown. Autopay: no (paid online). Paid Aug 13; no Sep bill or payment found."
-      },
-      "start": null,
-      "due": null,
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 37,
-      "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:45:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-parkforest-mohawk-water-20260926164500",
-          "ts": "2026-09-26T16:45:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-xfinity-mohawk-internet",
-      "nodeId": "s-mohawk-bills",
-      "status": "b-re-todo",
-      "title": "Xfinity internet due",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Autopay: yes. Property likely Mohawk."
-      },
-      "start": null,
-      "due": "2026-10-03",
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 38,
-      "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T16:45:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-xfinity-mohawk-internet-20260926164500",
-          "ts": "2026-09-26T16:45:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-groot-echo-commercial-dispute",
-      "nodeId": "s-echo-bills",
-      "status": "b-re-todo",
-      "title": "Groot commercial trash invoice in dispute (July)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Possibly invalid: July invoice disputed Aug 2 because the container was removed in June; unresolved. Paper bills. Service is supposed to start after WM ends Sep 28."
-      },
-      "start": null,
-      "due": null,
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 39,
-      "createdAt": "2026-09-26T16:55:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-groot-echo-commercial-dispute-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the corrected bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-aurora-echo-water",
-      "nodeId": "s-echo-bills",
-      "status": "b-re-todo",
-      "title": "City of Aurora water due (Echo)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Estimated due date: billed every 2 months (next bill around Oct 10). Statements missing since spring (no Apr/Jun/Aug bills or receipts), so check the city portal. Autopay: unknown (city required card autopay re-enrollment in Mar)."
-      },
-      "start": null,
-      "due": "2026-10-31",
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 40,
-      "createdAt": "2026-09-26T16:55:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-aurora-echo-water-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the corrected bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-aurora-plum-1743-water",
-      "nodeId": "s-plum-bills",
-      "status": "b-re-todo",
-      "title": "City of Aurora water due (1743 Plum)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Estimated due date (Sep 30 to Oct 1): billed every 2 months. Statements missing since spring (no May/Jul/Sep bills), so check the city portal. Autopay: unknown. No water account found for 1745 Plum."
-      },
-      "start": null,
-      "due": "2026-09-30",
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 41,
-      "createdAt": "2026-09-26T16:55:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-aurora-plum-1743-water-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the corrected bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-crystallake-college-water-2",
-      "nodeId": "s-college-bills",
-      "status": "b-re-todo",
-      "title": "City of Crystal Lake water/sewer due (335 College, tenant pays)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Tenant pays on autopay; owner gets a copy only. Owner may be liable if unpaid. Due date estimated (around the 21st)."
-      },
-      "start": null,
-      "due": "2026-10-21",
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 42,
-      "createdAt": "2026-09-26T16:55:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-crystallake-college-water-2-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the corrected bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-obie-mohawk-insurance",
-      "nodeId": "s-mohawk-bills",
-      "status": "b-re-todo",
-      "title": "Obie landlord insurance (Mohawk)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Due date and premium unknown. Policy was issued with the wrong street address; a fix was requested Jul 14 and changes posted Jul 20. Confirm the address on the policy was corrected."
-      },
-      "start": null,
-      "due": null,
-      "checklist": [],
-      "comments": [],
-      "labels": [
-        "Bills"
-      ],
-      "source": "Bills",
-      "lastEditedBy": "Bills",
-      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
-      "taskUrl": null,
-      "order": 43,
-      "createdAt": "2026-09-26T16:55:00-05:00",
-      "updatedAt": "2026-09-26T16:55:00-05:00",
-      "activity": [
-        {
-          "id": "m-bill-obie-mohawk-insurance-20260926165500",
-          "ts": "2026-09-26T16:55:00-05:00",
-          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
-          "actorName": "MRE Bills & Payments",
-          "action": "Added from the corrected bill calendar"
-        }
-      ]
-    },
-    {
-      "id": "bill-fay-mohawk-mortgage",
-      "nodeId": "s-mohawk-bills",
-      "status": "b-re-todo",
-      "title": "Fay Servicing mortgage due (date unknown)",
-      "fields": {
-        "owner": "Bills",
-        "notes": "Mohawk mortgage, serviced by Fay Servicing since December (per Librarian records Sep 26). Payment, due date, autopay and how it is paid are not in email: check the Fay online account.",
+        "notes": "Due date unknown. Autopay: no (paid online). Paid Aug 13; no Sep bill or payment found.",
+        "billCompany": "Village of Park Forest",
+        "billType": "utility",
+        "autopay": "no",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "missing statements (receipts only)",
+        "billStatus": "paid",
         "actionType": [
           "email"
         ]
@@ -1625,9 +1651,361 @@
       "lastEditedBy": "Bills",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "taskUrl": null,
+      "order": 37,
+      "createdAt": "2026-09-26T16:45:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-parkforest-mohawk-water-20260926164500",
+          "ts": "2026-09-26T16:45:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the bill calendar"
+        },
+        {
+          "id": "m-bill-parkforest-mohawk-water-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-xfinity-mohawk-internet",
+      "nodeId": "s-mohawk-bills",
+      "status": "b-re-todo",
+      "title": "Xfinity internet due",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Autopay: yes. Property likely Mohawk.",
+        "billCompany": "Xfinity",
+        "billType": "utility",
+        "autopay": "yes",
+        "dueDate": "2026-10-03",
+        "estimated": false,
+        "gap": false,
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-10-03",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 38,
+      "createdAt": "2026-09-26T16:45:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-xfinity-mohawk-internet-20260926164500",
+          "ts": "2026-09-26T16:45:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the bill calendar"
+        },
+        {
+          "id": "m-bill-xfinity-mohawk-internet-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-groot-echo-commercial-dispute",
+      "nodeId": "s-echo-bills",
+      "status": "b-re-todo",
+      "title": "Groot commercial trash invoice in dispute (July)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Possibly invalid: July invoice disputed Aug 2 because the container was removed in June; unresolved. Paper bills. Service is supposed to start after WM ends Sep 28.",
+        "billCompany": "Groot",
+        "billType": "waste",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "details not in email (paper bills)",
+        "billStatus": "disputed",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 39,
+      "createdAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-groot-echo-commercial-dispute-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the corrected bill calendar"
+        },
+        {
+          "id": "m-bill-groot-echo-commercial-dispute-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-aurora-echo-water",
+      "nodeId": "s-echo-bills",
+      "status": "b-re-todo",
+      "title": "City of Aurora water due (Echo)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Estimated due date: billed every 2 months (next bill around Oct 10). Statements missing since spring (no Apr/Jun/Aug bills or receipts), so check the city portal. Autopay: unknown (city required card autopay re-enrollment in Mar).",
+        "billCompany": "City of Aurora",
+        "billType": "utility",
+        "autopay": "unknown",
+        "dueDate": "2026-10-31",
+        "estimated": true,
+        "gap": true,
+        "gapReason": "missing statements since spring",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-10-31",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 40,
+      "createdAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-aurora-echo-water-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the corrected bill calendar"
+        },
+        {
+          "id": "m-bill-aurora-echo-water-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-aurora-plum-1743-water",
+      "nodeId": "s-plum-bills",
+      "status": "b-re-todo",
+      "title": "City of Aurora water due (1743 Plum)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Estimated due date (Sep 30 to Oct 1): billed every 2 months. Statements missing since spring (no May/Jul/Sep bills), so check the city portal. Autopay: unknown. No water account found for 1745 Plum.",
+        "billCompany": "City of Aurora",
+        "billType": "utility",
+        "autopay": "unknown",
+        "dueDate": "2026-09-30",
+        "estimated": true,
+        "gap": true,
+        "gapReason": "missing statements since spring",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-09-30",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 41,
+      "createdAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-aurora-plum-1743-water-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the corrected bill calendar"
+        },
+        {
+          "id": "m-bill-aurora-plum-1743-water-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-crystallake-college-water-2",
+      "nodeId": "s-college-bills",
+      "status": "b-re-todo",
+      "title": "City of Crystal Lake water/sewer due (335 College, tenant pays)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Tenant pays on autopay; owner gets a copy only. Owner may be liable if unpaid. Due date estimated (around the 21st).",
+        "billCompany": "City of Crystal Lake",
+        "billType": "utility",
+        "autopay": "yes",
+        "dueDate": "2026-10-21",
+        "estimated": true,
+        "gap": false,
+        "billStatus": "paid",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-10-21",
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 42,
+      "createdAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-crystallake-college-water-2-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the corrected bill calendar"
+        },
+        {
+          "id": "m-bill-crystallake-college-water-2-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-obie-mohawk-insurance",
+      "nodeId": "s-mohawk-bills",
+      "status": "b-re-todo",
+      "title": "Obie landlord insurance (Mohawk)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Due date and premium unknown. Policy was issued with the wrong street address; a fix was requested Jul 14 and changes posted Jul 20. Confirm the address on the policy was corrected.",
+        "billCompany": "Obie",
+        "billType": "insurance",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "details not in email",
+        "billStatus": "upcoming",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 43,
+      "createdAt": "2026-09-26T16:55:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-bill-obie-mohawk-insurance-20260926165500",
+          "ts": "2026-09-26T16:55:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Added from the corrected bill calendar"
+        },
+        {
+          "id": "m-bill-obie-mohawk-insurance-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "bill-fay-mohawk-mortgage",
+      "nodeId": "s-mohawk-bills",
+      "status": "b-re-todo",
+      "title": "Fay Servicing mortgage due (date unknown)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Mohawk mortgage, serviced by Fay Servicing since December (per Librarian records Sep 26). Payment, due date, autopay and how it is paid are not in email: check the Fay online account.",
+        "actionType": [
+          "email"
+        ],
+        "billCompany": "Fay Servicing",
+        "billType": "mortgage",
+        "autopay": "unknown",
+        "estimated": false,
+        "gap": true,
+        "gapReason": "details not in email",
+        "billStatus": "upcoming"
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [
+        "Bills"
+      ],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
       "order": 44,
       "createdAt": "2026-09-26T21:12:00-05:00",
-      "updatedAt": "2026-09-26T21:12:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "activity": [
         {
           "id": "m-bill-fay-mohawk-mortgage-20260926211200",
@@ -1635,6 +2013,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Added Mohawk mortgage card (Fay Servicing, details unknown)"
+        },
+        {
+          "id": "m-bill-fay-mohawk-mortgage-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Structured bill fields added for dashboard"
         }
       ]
     }
