@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updated": "2026-09-26T21:19:10-05:00",
+  "updated": "2026-09-27T06:53:30-05:00",
   "items": [
     {
       "id": "echo-b-city-reinspection",
@@ -9,7 +9,7 @@
       "title": "City reinspection Wed Oct 14, 2:30 PM",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Post notice on the door and confirm tenant access.",
+        "notes": "Post notice on the door and confirm tenant access. Ready to draft door notice; waiting on go-ahead.",
         "actionType": [
           "physical",
           "sms"
@@ -24,7 +24,7 @@
       "lastEditedBy": "Maintenance",
       "order": 0,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T16:18:00-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -33,8 +33,16 @@
           "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
           "actorName": "MRE Maintenance & Work Orders",
           "action": "Created by MRE Maintenance & Work Orders"
+        },
+        {
+          "id": "m-echo-b-city-reinspection-20260926161800",
+          "ts": "2026-09-26T16:18:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Ready to draft door notice and access confirmation; waiting on go-ahead"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "echo-b-extension-in-writing",
@@ -43,7 +51,7 @@
       "title": "Confirm in writing the city's Nov 20 extension",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Extension covers wall water damage and drywall.",
+        "notes": "City offered a Nov 20 extension for wall water damage and drywall; not yet confirmed in writing.",
         "actionType": [
           "email"
         ]
@@ -57,7 +65,7 @@
       "lastEditedBy": "Maintenance",
       "order": 1,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T16:18:00-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -66,8 +74,16 @@
           "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
           "actorName": "MRE Maintenance & Work Orders",
           "action": "Created by MRE Maintenance & Work Orders"
+        },
+        {
+          "id": "m-echo-b-extension-in-writing-20260926161800",
+          "ts": "2026-09-26T16:18:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Still needs written confirmation of the Nov 20 extension"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "echo-plumber-water-bill",
@@ -79,7 +95,8 @@
         "actionType": [
           "physical",
           "sms"
-        ]
+        ],
+        "notes": "Only Unit A checked so far. Need entry notice for all units, then hand return visit to Vendors."
       },
       "start": null,
       "due": null,
@@ -90,7 +107,7 @@
       "lastEditedBy": "Maintenance",
       "order": 2,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T16:18:00-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -99,17 +116,25 @@
           "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
           "actorName": "MRE Maintenance & Work Orders",
           "action": "Created by MRE Maintenance & Work Orders"
+        },
+        {
+          "id": "m-echo-plumber-water-bill-20260926161800",
+          "ts": "2026-09-26T16:18:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Waiting on entry notice for all Echo units before plumber return visit"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "red-maple-overdue-invoices",
-      "nodeId": "s-echo-vendors",
+      "nodeId": "s-general-vendors",
       "status": "b-re-todo",
       "title": "Red Maple Landscaping overdue invoices (Echo + Plum)",
       "fields": {
         "owner": "Vendors",
-        "notes": "Covers both Echo and Plum.",
+        "notes": "Covers both Echo and Plum. Still unpaid; Square reminders continue.",
         "actionType": [
           "email"
         ]
@@ -125,7 +150,7 @@
       "lastEditedBy": "Vendors",
       "order": 3,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -134,19 +159,29 @@
           "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
           "actorName": "MRE Vendors",
           "action": "Created by MRE Vendors"
+        },
+        {
+          "id": "m-red-maple-overdue-invoices-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Confirmed still unpaid; no duplicate payments found; waiting on approval to pay"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "general-contractor-zelle",
-      "nodeId": "s-general-vendors",
+      "nodeId": "s-echo-vendors",
       "status": "b-re-todo",
       "title": "Pay or resolve repair contractor's pending Zelle request",
       "fields": {
         "owner": "Vendors",
         "actionType": [
+          "email",
           "sms"
-        ]
+        ],
+        "notes": "Echo repairs. Earlier Zelle sends were canceled by the bank; contractor resent a request."
       },
       "start": null,
       "due": null,
@@ -157,7 +192,7 @@
       "lastEditedBy": "Vendors",
       "order": 4,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -166,8 +201,16 @@
           "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
           "actorName": "MRE Vendors",
           "action": "Created by MRE Vendors"
+        },
+        {
+          "id": "m-general-contractor-zelle-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Still unpaid; earlier bank Zelle sends canceled; waiting on approval to pay"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "general-sheriff-form",
@@ -237,13 +280,14 @@
     {
       "id": "mohawk-pro-builders-quote",
       "nodeId": "s-mohawk-vendors",
-      "status": "b-re-todo",
+      "status": "b-re-review",
       "title": "Review Pro Builders quote",
       "fields": {
         "owner": "Vendors",
         "actionType": [
           "email"
-        ]
+        ],
+        "notes": "Scope has address typo and unsigned. Draft fix-request email is in Gmail Drafts; not sent."
       },
       "start": null,
       "due": null,
@@ -254,7 +298,7 @@
       "lastEditedBy": "Vendors",
       "order": 7,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -263,17 +307,25 @@
           "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
           "actorName": "MRE Vendors",
           "action": "Created by MRE Vendors"
+        },
+        {
+          "id": "m-mohawk-pro-builders-quote-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Drafted fix-request email for quote issues; waiting for go-ahead to send"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "echo-wm-invoice-check",
       "nodeId": "s-echo-bills",
-      "status": "b-re-todo",
+      "status": "b-re-done",
       "title": "Check whether the WM waste invoice is a mistake",
       "fields": {
         "owner": "Bills",
-        "notes": "Service was switched to Groot.",
+        "notes": "Resolved: September invoice is valid. WM was kept through Sep 28 on purpose. Follow trash handoff on the Vendors card.",
         "actionType": [
           "email"
         ]
@@ -287,7 +339,7 @@
       "lastEditedBy": "Bills",
       "order": 8,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -303,8 +355,16 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Checked: the Sep WM invoice is valid (WM kept through Sep 28 per contract). Tracked on the WM waste invoice card."
+        },
+        {
+          "id": "m-echo-wm-invoice-check-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Closed: Sep WM invoice is valid; track trash handoff on the Vendors card"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "mohawk-list-openings",
@@ -377,7 +437,7 @@
       "title": "Water and saturated drywall near toilet",
       "fields": {
         "owner": "Maintenance",
-        "notes": "Moisture check; need access to the unit above.",
+        "notes": "Plumber found no active leak; suspects unit above. Needs upstairs access or moisture check.",
         "actionType": [
           "physical",
           "sms"
@@ -392,7 +452,7 @@
       "lastEditedBy": "Maintenance",
       "order": 11,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T16:18:00-05:00",
       "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
       "activity": [
         {
@@ -401,8 +461,16 @@
           "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
           "actorName": "MRE Maintenance & Work Orders",
           "action": "Created by MRE Maintenance & Work Orders"
+        },
+        {
+          "id": "m-echo-a-drywall-moisture-20260926161800",
+          "ts": "2026-09-26T16:18:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Plumber visit done; no active leak; needs upstairs access or moisture check"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "crown-turnover-oct1",
@@ -412,8 +480,10 @@
       "fields": {
         "owner": "Leasing",
         "actionType": [
-          "physical"
-        ]
+          "physical",
+          "email"
+        ],
+        "notes": "Realtor follow-up on keys and photos is in review. Mortgage not on autopay for Oct 1."
       },
       "start": null,
       "due": "2026-10-01",
@@ -424,7 +494,7 @@
       "lastEditedBy": "Leasing",
       "order": 12,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
       "activity": [
         {
@@ -433,8 +503,16 @@
           "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
           "actorName": "MRE Leasing & Vacancies",
           "action": "Created by MRE Leasing & Vacancies"
+        },
+        {
+          "id": "m-crown-turnover-oct1-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Crown Point vacancy Oct 1 still on track; realtor keys and photos pending"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "mohawk-porch-estimate",
@@ -444,9 +522,10 @@
       "fields": {
         "owner": "Vendors",
         "actionType": [
-          "physical",
-          "sms"
-        ]
+          "sms",
+          "physical"
+        ],
+        "notes": "Estimate discussed by text; amount not yet confirmed."
       },
       "start": null,
       "due": null,
@@ -457,7 +536,7 @@
       "lastEditedBy": "Vendors",
       "order": 13,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
       "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
       "activity": [
         {
@@ -466,19 +545,28 @@
           "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
           "actorName": "MRE Vendors",
           "action": "Created by MRE Vendors"
+        },
+        {
+          "id": "m-mohawk-porch-estimate-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Porch estimate still open; amount unknown"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "general-due-date-list",
       "nodeId": "s-general-bills",
-      "status": "b-re-inprogress",
+      "status": "b-re-review",
       "title": "Build mortgage and utility due-date list for all properties",
       "fields": {
         "owner": "Bills",
         "actionType": [
           "email"
-        ]
+        ],
+        "notes": "Bill calendar built and mortgages mapped to properties. Gaps left: Fay Servicing details for Mohawk; a few utility accounts still unmapped."
       },
       "start": null,
       "due": null,
@@ -489,7 +577,7 @@
       "lastEditedBy": "Bills",
       "order": 14,
       "createdAt": "2026-09-26T15:00:00-05:00",
-      "updatedAt": "2026-09-26T16:01:04-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
       "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
       "activity": [
         {
@@ -498,8 +586,16 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Created by MRE Bills & Payments"
+        },
+        {
+          "id": "m-general-due-date-list-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Bill calendar built; mortgages mapped to properties; a few gaps remain"
         }
-      ]
+      ],
+      "taskUrl": null
     },
     {
       "id": "crown-realtor-keys-photos",
@@ -1450,7 +1546,7 @@
       "title": "WM waste invoice due (service ends Sep 28)",
       "fields": {
         "owner": "Bills",
-        "notes": "September invoice is valid: KV kept WM through Sep 28 to avoid an early-termination fee. Service ends Sep 28, container pickup Sep 29, final October invoice expected for removal. Due date not stated. Autopay: no; history of late payment.",
+        "notes": "September invoice is valid. Service ends Sep 28; final October removal invoice expected.",
         "billCompany": "WM",
         "billType": "waste",
         "autopay": "no",
@@ -1463,7 +1559,7 @@
         ]
       },
       "start": null,
-      "due": null,
+      "due": "2026-09-28",
       "checklist": [],
       "comments": [],
       "labels": [
@@ -1475,7 +1571,7 @@
       "taskUrl": null,
       "order": 34,
       "createdAt": "2026-09-26T16:45:00-05:00",
-      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "updatedAt": "2026-09-26T21:25:00-05:00",
       "activity": [
         {
           "id": "m-bill-wm-echo-waste-20260926164500",
@@ -1497,6 +1593,13 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Structured bill fields added for dashboard"
+        },
+        {
+          "id": "m-bill-wm-echo-waste-20260926212500",
+          "ts": "2026-09-26T21:25:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Set due date to WM service end; final removal invoice expected in October"
         }
       ]
     },
@@ -2020,6 +2123,283 @@
           "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
           "actorName": "MRE Bills & Payments",
           "action": "Structured bill fields added for dashboard"
+        }
+      ]
+    },
+    {
+      "id": "echo-c-d-lease-renewals",
+      "nodeId": "s-echo-leasing",
+      "status": "b-re-todo",
+      "title": "Echo Unit C and Unit D leases end Sep 29-30; decide renew / month-to-month / move-out",
+      "fields": {
+        "owner": "Leasing",
+        "notes": "No signed renewals found. Unit D ends Sep 29; Unit C ends Sep 30. Need a call on each unit.",
+        "actionType": [
+          "sms",
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-09-29",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Leasing",
+      "lastEditedBy": "Leasing",
+      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
+      "taskUrl": null,
+      "order": 45,
+      "createdAt": "2026-09-26T21:20:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-echo-c-d-lease-renewals-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Confirmed lease end dates; no renewals on file"
+        }
+      ]
+    },
+    {
+      "id": "echo-wm-groot-handoff",
+      "nodeId": "s-echo-vendors",
+      "status": "b-re-todo",
+      "title": "Echo trash handoff: WM ends Sep 28; confirm Groot restart",
+      "fields": {
+        "owner": "Vendors",
+        "notes": "WM container removal is Sep 29. Groot Echo account has been on vacation hold; restart not confirmed. Draft reply to Groot ready; waiting to send.",
+        "actionType": [
+          "email",
+          "physical"
+        ]
+      },
+      "start": null,
+      "due": "2026-09-28",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "taskUrl": null,
+      "order": 46,
+      "createdAt": "2026-09-26T21:05:00-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
+      "activity": [
+        {
+          "id": "m-echo-wm-groot-handoff-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Flagged WM end date and unconfirmed Groot restart; draft to hauler ready"
+        }
+      ]
+    },
+    {
+      "id": "echo-deck-step-quote",
+      "nodeId": "s-echo-vendors",
+      "status": "b-re-todo",
+      "title": "Echo deck step repair quote (open)",
+      "fields": {
+        "owner": "Vendors",
+        "notes": "Estimate received mid-summer for deck step replacement and repaint; no acceptance found.",
+        "actionType": [
+          "email",
+          "physical"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "taskUrl": null,
+      "order": 47,
+      "createdAt": "2026-09-26T21:05:00-05:00",
+      "updatedAt": "2026-09-26T21:05:00-05:00",
+      "activity": [
+        {
+          "id": "m-echo-deck-step-quote-20260926210500",
+          "ts": "2026-09-26T21:05:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Cataloged open deck-step quote; no acceptance found"
+        }
+      ]
+    },
+    {
+      "id": "vendors-directory-sheet",
+      "nodeId": "s-general-vendors",
+      "status": "b-re-done",
+      "title": "Vendor directory sheet built",
+      "fields": {
+        "owner": "Vendors",
+        "notes": "Directory and invoice catalog saved under MRE Drive.",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Vendors",
+      "lastEditedBy": "Vendors",
+      "agent": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+      "taskUrl": null,
+      "order": 48,
+      "createdAt": "2026-09-26T21:17:00-05:00",
+      "updatedAt": "2026-09-26T21:17:00-05:00",
+      "activity": [
+        {
+          "id": "m-vendors-directory-sheet-20260926211700",
+          "ts": "2026-09-26T21:17:00-05:00",
+          "actor": "1d1e9dc5-bdb7-411e-b490-7bb403e2d348",
+          "actorName": "MRE Vendors",
+          "action": "Built vendor directory and invoice catalog"
+        }
+      ]
+    },
+    {
+      "id": "crown-vacancy-insurance-notice",
+      "nodeId": "s-crown-bills",
+      "status": "b-re-todo",
+      "title": "Crown Point: notify insurer the house is vacant starting Oct 1",
+      "fields": {
+        "owner": "Bills",
+        "notes": "Policy is paid from mortgage escrow; nothing due to the insurer. Vacancy notice still needed.",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": "2026-10-01",
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 49,
+      "createdAt": "2026-09-26T21:20:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-crown-vacancy-insurance-notice-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "Flagged vacancy notice needed when property empties Oct 1"
+        }
+      ]
+    },
+    {
+      "id": "aurora-rental-licenses-2026",
+      "nodeId": "s-general-bills",
+      "status": "b-re-todo",
+      "title": "Aurora 2026 rental license renewals (Echo and Plum)",
+      "fields": {
+        "owner": "Bills",
+        "notes": "2026 renewals not found in email; last paid Aug 2025. Confirm whether already filed.",
+        "actionType": [
+          "email"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Bills",
+      "lastEditedBy": "Bills",
+      "agent": "62cbcc0d-ba22-4956-9857-05551978ce22",
+      "taskUrl": null,
+      "order": 50,
+      "createdAt": "2026-09-26T21:20:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-aurora-rental-licenses-2026-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "62cbcc0d-ba22-4956-9857-05551978ce22",
+          "actorName": "MRE Bills & Payments",
+          "action": "No 2026 rental license renewals found in email"
+        }
+      ]
+    },
+    {
+      "id": "echo-deck-permit-closeout",
+      "nodeId": "s-echo-tasks",
+      "status": "b-re-todo",
+      "title": "Echo deck permit: close out expired city permit",
+      "fields": {
+        "owner": "Maintenance",
+        "notes": "City sent an expired-permit letter in early 2025; never closed out.",
+        "actionType": [
+          "email",
+          "physical"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Maintenance",
+      "lastEditedBy": "Maintenance",
+      "agent": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+      "taskUrl": null,
+      "order": 51,
+      "createdAt": "2026-09-26T16:18:00-05:00",
+      "updatedAt": "2026-09-26T16:18:00-05:00",
+      "activity": [
+        {
+          "id": "m-echo-deck-permit-closeout-20260926161800",
+          "ts": "2026-09-26T16:18:00-05:00",
+          "actor": "24dbc830-2ab6-4a64-81f8-ce513aad2c53",
+          "actorName": "MRE Maintenance & Work Orders",
+          "action": "Logged expired deck permit still open with the city"
+        }
+      ]
+    },
+    {
+      "id": "mohawk-occupancy-inspection",
+      "nodeId": "s-mohawk-leasing",
+      "status": "b-re-todo",
+      "title": "Mohawk: add Park Forest occupancy inspection to turnover checklist",
+      "fields": {
+        "owner": "Leasing",
+        "notes": "Village requires occupancy inspection and heating certification for each new tenant.",
+        "actionType": [
+          "physical",
+          "email"
+        ]
+      },
+      "start": null,
+      "due": null,
+      "checklist": [],
+      "comments": [],
+      "labels": [],
+      "source": "Leasing",
+      "lastEditedBy": "Leasing",
+      "agent": "46c84c93-3489-486b-b331-16ab46f8ff98",
+      "taskUrl": null,
+      "order": 52,
+      "createdAt": "2026-09-26T21:20:00-05:00",
+      "updatedAt": "2026-09-26T21:20:00-05:00",
+      "activity": [
+        {
+          "id": "m-mohawk-occupancy-inspection-20260926212000",
+          "ts": "2026-09-26T21:20:00-05:00",
+          "actor": "46c84c93-3489-486b-b331-16ab46f8ff98",
+          "actorName": "MRE Leasing & Vacancies",
+          "action": "Added village occupancy inspection requirement to Mohawk turnover notes"
         }
       ]
     }
