@@ -1,0 +1,4 @@
+# Plaintext finance data must never be committed; only finance.enc.json (ciphertext) is published.
+finance-data*.json
+mre-bills/
+node_modules/

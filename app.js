@@ -49,6 +49,8 @@ const VIEWS = [ // the four main views first; 'grid' keeps its internal id
   { id: 'kanban', name: 'Kanban', ico: '▥', render: renderKanban, phone: true },
   { id: 'dashboard', name: 'Dashboard', ico: '◔', render: renderDashboard, phone: true },
   { id: 'calendar', name: 'Calendar', ico: '▣', render: renderCalendar, phone: true },
+  { id: 'bills', name: 'Bills', ico: '⊟', render: renderBills, phone: true },
+  { id: 'finance', name: 'Finance', ico: '¤', render: renderFinance, phone: true },
   { id: 'grid', name: 'Spreadsheet', ico: '▦', render: renderGrid, phone: true },
   { id: 'timeline', name: 'Timeline', ico: '☰', render: renderTimeline, phone: true },
   { id: 'gallery', name: 'Gallery', ico: '▤', render: renderGallery, phone: true },
@@ -118,7 +120,8 @@ function resolveDateToken(v) { if (v === 'today') return todayStr(); const m = /
 let WS = null;   // workspace doc
 let IT = null;   // items doc
 const DEFAULT_UI = { view: 'kanban', scope: 'all', search: '', quick: { domain: '', groups: [], section: '', status: '', owner: '', actionType: [], ideas: false },
-  rules: [], sort: { key: 'due', dir: 1 }, groupBy: 'status', calMonth: null, calDay: null, colFilters: {}, collapsed: {}, showArchived: false, activeSaved: '', workspace: 'all', gridCols: {}, ganttZoom: 'week', ganttGroup: 'property', ganttColor: 'status', mmCollapsed: {}, mmLinksOnly: false };
+  rules: [], sort: { key: 'due', dir: 1 }, groupBy: 'status', calMonth: null, calDay: null, colFilters: {}, collapsed: {}, showArchived: false, activeSaved: '', workspace: 'all', gridCols: {}, ganttZoom: 'week', ganttGroup: 'property', ganttColor: 'status', mmCollapsed: {}, mmLinksOnly: false,
+  bills: { tile: '', prop: '', type: '', autopay: '', status: '', layout: 'list' } };
 let UI = loadUI();
 function loadUI() { try { const u = Object.assign(clone(DEFAULT_UI), JSON.parse(localStorage.getItem(LS.ui) || '{}')); u.quick = Object.assign(clone(DEFAULT_UI.quick), u.quick || {}); if (QS.get('ws')) u.workspace = QS.get('ws'); return u; } catch { return clone(DEFAULT_UI); } }
 function saveUI() { try { localStorage.setItem(LS.ui, JSON.stringify(UI)); } catch {} }
@@ -964,7 +967,9 @@ function renderHeader() {
 function render() {
   if (!WS) return;
   if (UI.scope !== 'all' && !node(UI.scope)) UI.scope = 'all';
-  saveUI(); renderHeader(); renderTree(); renderTabs(); renderToolbar(); renderChips(); renderFilterPanel(); renderView(); renderFoot();
+  saveUI(); renderHeader(); renderTree(); renderTabs(); renderToolbar(); renderChips(); renderFilterPanel();
+  const fin = UI.view === 'finance'; $('#toolbar').hidden = fin; $('#chips').hidden = fin; if (fin) $('#filterPanel').hidden = true;
+  renderView(); renderFoot();
 }
 function softRender() {
   if (!WS) return;
@@ -1320,6 +1325,202 @@ function renderCalendar(v, items) {
   v.append(panel);
 }
 
+/* ---------------- Bills (public: dates, autopay, gaps — never amounts) ---------------- */
+/* Rows come from items whose id starts "bill-" (structured fields billCompany/billType/autopay/dueDate/estimated/gap/
+ * gapReason/billStatus; missing = ''). Date math, countdowns and tile rules live in finance-core.js so tests can run them. */
+const MF = window.MREFinance || null;
+const BILL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1dw86HzfTVC7lgTpkegqquTs0mO7Bn5BU/edit';
+const BILL_TYPE_LABEL = { mortgage: 'Mortgage', utility: 'Utility', waste: 'Waste', card: 'Credit card', insurance: 'Insurance', other: 'Other' };
+const BILL_STATUS_COLOR = { upcoming: '#64748b', paid: '#16a34a', overdue: '#dc2626', disputed: '#9333ea' };
+const AUTOPAY_LABEL = { yes: 'Autopay on', no: 'Autopay off', unknown: 'Autopay ?' };
+const cap = (s) => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+function billsUI() { UI.bills = Object.assign(clone(DEFAULT_UI.bills), UI.bills || {}); return UI.bills; }
+function propColor(p) { const g = WS.nodes.find((n) => n.type === 'group' && MF.propKey(n.name) === p); return g ? nodeColor(g.id) : (V1_PROPS[p.toLowerCase()] || [, '#64748b'])[1]; }
+function billRows(items) {
+  const t = todayStr();
+  return MF.sortBills(items.filter((it) => /^bill-/.test(it.id)).map((it) => { const g = groupOf(it.nodeId); return { ...MF.billInfo(it, { today: t, property: g ? g.name : '', done: isDone(it) }), color: g ? nodeColor(g.id) : null }; }));
+}
+function billPill(b) {
+  const tip = b.status === 'paid' ? 'Paid' : b.overdue ? 'Overdue bill' : b.urgent ? 'Bill due within 3 days' : b.days == null ? 'No due date on file' : 'Bill due';
+  return h('span', { class: 'bill-pill' + (b.urgent ? ' urgent' : '') + (b.status === 'paid' ? ' paid' : '') + (b.days == null ? ' nodate' : ''), title: tip }, atIcon('bill'), MF.countdownLabel(b));
+}
+function billDateEl(b) {
+  if (!b.dueDate) return h('span', { class: 'bill-date none' }, 'No due date');
+  return h('span', { class: 'bill-date' + (b.estimated ? ' est' : ''), title: b.estimated ? 'Estimated due date (not from a statement)' : 'Due date' }, (b.estimated ? '~' : '') + fmtDate(b.dueDate, { weekday: 'short', month: 'short', day: 'numeric' }));
+}
+function billBadges(b) {
+  return [h('span', { class: 'bill-ap ap-' + b.autopay, title: 'Autopay: ' + b.autopay }, AUTOPAY_LABEL[b.autopay]),
+    b.status !== 'upcoming' ? h('span', { class: 'pill', style: { '--pc': BILL_STATUS_COLOR[b.status] } }, cap(b.status)) : null,
+    b.hasGap ? h('span', { class: 'bill-gap', title: 'Gap: ' + (b.gapReason || 'unknown') }, 'gap') : null];
+}
+function renderBills(v, items) {
+  if (!MF) { v.append(h('div', { class: 'empty' }, 'Bills view needs finance-core.js, which did not load.')); return; }
+  const ui = billsUI(); const all = billRows(items);
+  const base = all.filter((b) => (!ui.prop || b.property === ui.prop) && (!ui.type || b.type === ui.type) && (!ui.autopay || b.autopay === ui.autopay) && (!ui.status || b.status === ui.status));
+  const counts = MF.billTileCounts(base); const list = ui.tile ? base.filter(MF.tileTest(ui.tile)) : base;
+  const set = (patch) => { Object.assign(ui, patch); saveUI(); renderView(); };
+  const tiles = h('div', { class: 'bill-tiles', role: 'group', 'aria-label': 'Bill summary — click a tile to filter' }, MF.BILL_TILES.map(([k, label]) => h('button', {
+    class: 'bill-tile' + ((k === 'overdue' && counts[k]) ? ' alert' : '') + ((k === 'gaps' && counts[k]) ? ' warn' : ''), dataset: { tile: k }, 'aria-pressed': String(ui.tile === k), title: ui.tile === k ? 'Show all bills' : 'Show only: ' + label,
+    onClick: () => set({ tile: ui.tile === k ? '' : k }) }, h('b', null, counts[k]), h('span', null, label))));
+  const sel = (id, label, key, opts) => h('label', { class: 'tb-label' }, label + ' ', h('select', { id, 'aria-label': label, value: ui[key], onChange: (e) => set({ [key]: e.target.value }) }, h('option', { value: '' }, 'All'), opts.map(([val, name]) => h('option', { value: val }, name))));
+  const filtered = ui.prop || ui.type || ui.autopay || ui.status || ui.tile;
+  const controls = h('div', { class: 'bill-controls' },
+    sel('billProp', 'Property', 'prop', MF.PROPERTIES.map((p) => [p, p])), sel('billType', 'Type', 'type', MF.BILL_TYPES.map((t) => [t, BILL_TYPE_LABEL[t]])),
+    sel('billAutopay', 'Autopay', 'autopay', MF.AUTOPAY.map((a) => [a, cap(a)])), sel('billStatus', 'Status', 'status', MF.BILL_STATUSES.map((s) => [s, cap(s)])),
+    filtered ? h('button', { class: 'btn ghost small', id: 'billClear', onClick: () => set({ tile: '', prop: '', type: '', autopay: '', status: '' }) }, 'Clear') : null,
+    h('span', { class: 'spacer' }),
+    h('div', { class: 'seg', role: 'group', 'aria-label': 'Layout' }, [['list', '☰ List'], ['grid', '▦ By property']].map(([k, l]) => h('button', { class: 'btn small', id: 'billLayout-' + k, 'aria-pressed': String(ui.layout === k), onClick: () => ui.layout !== k && set({ layout: k }) }, l))),
+    h('a', { class: 'btn small', id: 'billAmounts', href: BILL_SHEET_URL, target: '_blank', rel: 'noopener noreferrer', title: 'Amounts are kept in a private Google Sheet, not on this public page' }, 'Amounts (private sheet) ↗'));
+  const row = (b) => h('li', null, h('button', { class: 'bill-row' + (b.urgent ? ' urgent' : '') + (b.status === 'paid' ? ' paid' : ''), dataset: { bill: b.id }, 'aria-label': `${b.company}, ${b.property}, ${MF.countdownLabel(b)}. Open card`, onClick: () => openCard(b.id) },
+    billPill(b), h('span', { class: 'bill-main' }, h('span', { class: 'bill-co' }, b.company), h('span', { class: 'bill-sub' }, BILL_TYPE_LABEL[b.type])),
+    h('span', { class: 'prop', style: { '--pc': b.color || propColor(b.property) } }, b.property), billDateEl(b), h('span', { class: 'bill-badges' }, billBadges(b))));
+  let body;
+  if (!list.length) body = h('div', { class: 'empty' }, all.length ? 'No bills match these filters.' : 'No bill cards in this workspace or search.');
+  else if (ui.layout === 'grid') body = h('div', { class: 'bill-grid' }, MF.PROPERTIES.filter((p) => !ui.prop || p === ui.prop).map((p) => { const l = list.filter((b) => b.property === p); if (!l.length) return null;
+    return h('section', { class: 'bill-col', style: { '--pc': propColor(p) }, 'aria-label': p }, h('h3', null, h('i', { class: 'dot', style: { background: propColor(p) } }), p, h('span', { class: 'count' }, l.length)),
+      l.map((b) => h('button', { class: 'bill-card' + (b.urgent ? ' urgent' : '') + (b.status === 'paid' ? ' paid' : ''), dataset: { bill: b.id }, onClick: () => openCard(b.id) },
+        h('div', { class: 'bill-card-top' }, billPill(b), billDateEl(b)), h('div', { class: 'bill-co' }, b.company), h('div', { class: 'bill-sub' }, BILL_TYPE_LABEL[b.type]), h('div', { class: 'bill-badges' }, billBadges(b))))); }));
+  else body = h('ul', { class: 'list bill-list' }, list.map(row));
+  const gaps = base.filter((b) => b.hasGap);
+  const gapPanel = h('aside', { class: 'panel bill-gaps', 'aria-label': 'Gaps' }, h('h3', null, 'Gaps ', h('span', { class: 'count' }, gaps.length)),
+    h('p', { class: 'meta-line' }, 'Missing statements, unmapped accounts, or no due date.'),
+    gaps.length ? h('ul', { class: 'list' }, gaps.map((b) => h('li', null, h('button', { dataset: { gap: b.id }, onClick: () => openCard(b.id) },
+      h('span', { class: 'prop', style: { '--pc': b.color || propColor(b.property) } }, b.property), h('b', null, b.company), h('span', { class: 'meta-line gap-why' }, b.gapReason || 'unknown'))))) : h('div', { class: 'empty' }, 'No gaps 🎉'));
+  v.append(h('div', { class: 'bills-view' }, tiles, controls, h('div', { class: 'bills-main' }, h('div', { class: 'bills-body' }, body), gapPanel),
+    h('p', { class: 'tl-note' }, `${list.length} of ${all.length} bills · sorted by due date, no due date last · ~ = estimated date · red = overdue or due within ${MF.URGENT_DAYS} days · amounts are only in the private sheet and the encrypted Finance view.`)));
+}
+
+/* ---------------- Finance (amounts: decrypted in memory from finance.enc.json) ---------------- */
+/* The page never holds plaintext at rest: finance.enc.json is AES-GCM ciphertext (see encrypt-finance.js). "Remember"
+ * stores only the derived AES key (raw, base64) with the file's salt, never the password. Lock wipes both. */
+const FIN_FILE = 'finance.enc.json', FIN_KEY_LS = 'mre.fin.key';
+const CHART_JS = { src: 'https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js', integrity: 'sha384-NrKB+u6Ts6AtkIhwPixiKTzgSKNblyhlk0Sohlgar9UHUBzai/sgnNNWWd291xqt' };
+const FIN = { data: null, sum: null, busy: false, err: '', autoTried: false, sort: { k: 'dueDate', dir: 1 }, charts: [] };
+const USD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+const usd = (n) => (n == null || !isFinite(n) ? '' : USD.format(n));
+function finDestroyCharts() { FIN.charts.forEach((c) => { try { c.destroy(); } catch {} }); FIN.charts = []; }
+function finLock(msg) { finDestroyCharts(); FIN.data = FIN.sum = null; FIN.err = ''; try { localStorage.removeItem(FIN_KEY_LS); } catch {} if (msg) toast(msg); renderView(); }
+async function finFetchEnvelope() {
+  const r = await fetch(FIN_FILE + '?t=' + Date.now(), { cache: 'no-store' });
+  if (!r.ok) throw new Error(r.status === 404 ? 'No encrypted finance file (finance.enc.json) is published yet.' : 'Could not load finance.enc.json (' + r.status + ')');
+  return r.json();
+}
+function finSetData(data) { FIN.data = data; FIN.sum = MF.financeSummary(data, todayStr()); FIN.err = ''; }
+async function finUnlock(password, remember) {
+  FIN.busy = true; FIN.err = ''; renderView();
+  try {
+    const env = await finFetchEnvelope(); const r = await MF.unlock(env, password, { extractable: remember });
+    if (remember) { try { localStorage.setItem(FIN_KEY_LS, JSON.stringify({ k: await MF.exportKey(r.key), salt: env.salt })); } catch {} } else { try { localStorage.removeItem(FIN_KEY_LS); } catch {} }
+    finSetData(r.data);
+  } catch (e) { FIN.err = e instanceof MF.WrongPassword ? 'Wrong password' : e.message || 'Could not unlock'; }
+  FIN.busy = false; renderView();
+}
+async function finAutoUnlock() {
+  FIN.autoTried = true; let saved = null; try { saved = JSON.parse(localStorage.getItem(FIN_KEY_LS) || 'null'); } catch {}
+  if (!saved || !saved.k) return;
+  FIN.busy = true; await Promise.resolve();
+  try { const env = await finFetchEnvelope(); if (env.salt !== saved.salt) throw new MF.WrongPassword(); finSetData(await MF.decryptWithKey(await MF.importKey(saved.k), env)); }
+  catch (e) { if (e instanceof MF.WrongPassword) { try { localStorage.removeItem(FIN_KEY_LS); } catch {} FIN.err = 'The finance file changed — enter the password again.'; } else FIN.err = e.message || 'Could not unlock'; }
+  FIN.busy = false; if (UI.view === 'finance') renderView();
+}
+function loadChartJs() {
+  if (window.Chart) return Promise.resolve(window.Chart);
+  return loadChartJs.p || (loadChartJs.p = new Promise((res, rej) => { const s = document.createElement('script'); s.src = CHART_JS.src; s.integrity = CHART_JS.integrity; s.crossOrigin = 'anonymous'; s.referrerPolicy = 'no-referrer';
+    s.onload = () => (window.Chart ? res(window.Chart) : rej(new Error('Chart.js missing'))); s.onerror = () => { loadChartJs.p = null; s.remove(); rej(new Error('Could not load Chart.js')); }; document.head.append(s); }));
+}
+function renderFinance(v) {
+  if (!MF) { v.append(h('div', { class: 'empty' }, 'Finance view needs finance-core.js, which did not load.')); return; }
+  if (!FIN.data && !FIN.autoTried && !FIN.busy) finAutoUnlock();
+  if (!FIN.data) return renderFinanceLock(v);
+  const s = FIN.sum; const phone = isPhone(); const gen = (FIN.gen = (FIN.gen || 0) + 1);
+  v.append(h('div', { class: 'fin-view' },
+    h('div', { class: 'fin-head' }, h('h2', null, 'Finance'), h('span', { class: 'meta-line' }, s.asOf ? 'As of ' + fmtStamp(s.asOf) : 'As-of date unknown'), h('span', { class: 'spacer' }),
+      h('a', { class: 'btn small', href: BILL_SHEET_URL, target: '_blank', rel: 'noopener noreferrer' }, 'Amounts sheet ↗'),
+      h('button', { class: 'btn small', id: 'finLock', title: 'Forget the key on this device and clear the numbers from memory', onClick: () => finLock('Finance locked') }, '🔒 Lock')),
+    s.shortfall ? h('div', { class: 'fin-banner', role: 'alert', id: 'finShortfall' }, h('b', null, '⚠ Cash due in the next 7 days is more than checking. '),
+      `${usd(s.cashDue7)} due vs ${usd(s.checking)} in checking — short ${usd(s.gap7)}.`) : null,
+    finTiles(s), h('div', { class: 'fin-charts' + (phone ? ' phone' : '') }, FIN_CHARTS.map(([id, title]) => h('section', { class: 'panel fin-chart' }, h('h3', null, title), h('div', { class: 'fin-canvas' }, h('canvas', { id: 'fc-' + id, role: 'img', 'aria-label': title }))))),
+    finTable(s),
+    h('p', { class: 'tl-note', id: 'finNote' }, `Data comes from email and bank alerts; blank means unknown. As of ${s.asOf ? fmtStamp(s.asOf) : 'unknown'}.`)));
+  loadChartJs().then((Chart) => { if (FIN.gen === gen && FIN.sum === s && $('#fc-week')) finDrawCharts(Chart, s); })
+    .catch(() => $$('.fin-canvas').forEach((c) => { c.innerHTML = ''; c.append(h('div', { class: 'empty' }, 'Charts unavailable (Chart.js could not load).')); }));
+}
+function renderFinanceLock(v) {
+  const pw = h('input', { type: 'password', id: 'finPassword', autocomplete: 'current-password', required: true, 'aria-describedby': 'finErr', disabled: FIN.busy || null });
+  const rem = h('input', { type: 'checkbox', id: 'finRemember' });
+  const form = h('form', { class: 'panel fin-lock', 'aria-labelledby': 'finLockTitle', onSubmit: (e) => { e.preventDefault(); if (pw.value) { const p = pw.value; pw.value = ''; finUnlock(p, rem.checked); } } },
+    h('h2', { id: 'finLockTitle' }, '🔒 Finance'),
+    h('p', { class: 'meta-line' }, 'Dollar amounts are encrypted. Enter the finance password to decrypt them on this device only — nothing is sent anywhere.'),
+    h('label', { class: 'fld', for: 'finPassword' }, h('span', null, 'Password'), pw),
+    h('label', { class: 'chk' }, rem, ' Remember on this device', h('span', { class: 'meta-line' }, ' (stores the decryption key, not the password)')),
+    h('div', { class: 'fin-lock-foot' }, h('button', { type: 'submit', class: 'btn primary', id: 'finUnlock', disabled: FIN.busy || null }, FIN.busy ? 'Unlocking…' : 'Unlock'),
+      h('span', { class: 'fin-err', id: 'finErr', role: 'alert' }, FIN.err)));
+  v.append(form); if (!FIN.busy && !isPhone()) requestAnimationFrame(() => pw.focus());
+}
+function finTiles(s) {
+  const tile = (id, label, val, sub, cls = '') => h('div', { class: 'fin-tile ' + cls, id: 'ft-' + id }, h('span', { class: 'fin-tl' }, label), h('b', { title: val === '' ? 'unknown' : null }, val === '' ? '—' : val), sub ? h('span', { class: 'meta-line' }, sub) : null);
+  const dueSub = (d) => [`${d.bills} bill${d.bills === 1 ? '' : 's'} + ${d.cards} card min${d.cards === 1 ? '' : 's'}, incl. overdue`, d.unknown ? ` · ${d.unknown} amount${d.unknown === 1 ? '' : 's'} unknown` : ''].join('');
+  const after = s.checking == null ? null : -s.gap7;
+  return h('div', { class: 'fin-tiles' },
+    tile('due7', 'Cash due · next 7 days', usd(s.cashDue7), dueSub(s.due7), s.shortfall ? 'bad' : ''),
+    tile('due30', 'Cash due · next 30 days', usd(s.cashDue30), dueSub(s.due30)),
+    tile('checking', 'Checking balance', usd(s.checking), s.latest ? 'Latest alert ' + fmtStamp(s.latest.at) : 'No balance on file'),
+    tile('gap', after != null && after < 0 ? 'Short after 7-day bills' : 'Checking after 7-day bills', after == null ? '' : usd(Math.abs(after)), 'Checking minus cash due in 7 days', after == null ? '' : after < 0 ? 'bad' : 'good'),
+    tile('cards', 'Credit card statements', usd(s.cardStatementTotal), `${s.cards.length} card${s.cards.length === 1 ? '' : 's'}` + (s.cardsUnknown ? ` · ${s.cardsUnknown} unknown` : '')),
+    tile('rent', 'Rent received this month', usd(s.rentThisMonth), fmtDate(s.month + '-01', { month: 'long', year: 'numeric' })));
+}
+const FIN_CHARTS = [['week', 'Bills due by week (next 8 weeks)'], ['prop', 'Monthly bill cost by property'], ['cat', 'Monthly cost by category'], ['cards', 'Credit cards: balance vs minimum'], ['checking', 'Checking balance and bill due dates'], ['rent', 'Rent received vs expected (this month)']];
+function finDrawCharts(Chart, s) {
+  const cs = getComputedStyle(document.documentElement); const css = (k) => cs.getPropertyValue(k).trim();
+  Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--border'); Chart.defaults.font.family = cs.fontFamily;
+  const money = { ticks: { callback: (v) => USD.format(v).replace(/\.00$/, '') }, beginAtZero: true };
+  const tip = { callbacks: { label: (c) => `${c.dataset.label ? c.dataset.label + ': ' : ''}${usd(c.parsed.y != null ? c.parsed.y : c.parsed)}` } };
+  const base = { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } }, tooltip: tip } };
+  const mk = (id, cfg) => { const el = $('#fc-' + id); if (el) FIN.charts.push(new Chart(el, cfg)); };
+  const props = MF.PROPERTIES.filter((p) => s.weeks.some((w) => w.byProp[p])).concat(Object.keys(Object.assign({}, ...s.weeks.map((w) => w.byProp))).filter((p) => !MF.PROPERTIES.includes(p)));
+  mk('week', { type: 'bar', data: { labels: s.weeks.map((w) => fmtDate(w.start)), datasets: props.map((p) => ({ label: p, data: s.weeks.map((w) => w.byProp[p] || 0), backgroundColor: propColor(p) })) },
+    options: { ...base, scales: { x: { stacked: true }, y: { ...money, stacked: true } } } });
+  const mp = Object.entries(s.monthlyByProp).sort((a, b) => MF.PROPERTIES.indexOf(a[0]) - MF.PROPERTIES.indexOf(b[0]));
+  mk('prop', { type: 'bar', data: { labels: mp.map((x) => x[0]), datasets: [{ label: 'Per month', data: mp.map((x) => Math.round(x[1] * 100) / 100), backgroundColor: mp.map((x) => propColor(x[0])) }] },
+    options: { ...base, plugins: { ...base.plugins, legend: { display: false } }, scales: { y: money } } });
+  const cat = Object.entries(s.byCategory).filter((x) => x[1] > 0); const catColors = { Mortgage: '#2563eb', Utilities: '#0891b2', Waste: '#65a30d', Insurance: '#9333ea', Cards: '#ca8a04', Other: '#64748b' };
+  mk('cat', { type: 'doughnut', data: { labels: cat.map((x) => x[0]), datasets: [{ data: cat.map((x) => Math.round(x[1] * 100) / 100), backgroundColor: cat.map((x) => catColors[x[0]]), borderColor: css('--panel') }] },
+    options: { ...base, plugins: { ...base.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${usd(c.parsed)}` } } } } });
+  mk('cards', { type: 'bar', data: { labels: s.cards.map((c) => c.name), datasets: [{ label: 'Statement balance', data: s.cards.map((c) => c.statementBalance), backgroundColor: '#ca8a04' }, { label: 'Minimum due', data: s.cards.map((c) => c.minimumDue), backgroundColor: '#dc2626' }] },
+    options: { ...base, scales: { y: money } } });
+  const dayOf = (iso) => dateOnly(iso); const dn = (d) => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10)) / 864e5;
+  const pts = s.checkingSeries.map((b) => ({ x: dn(dayOf(b.at)), y: b.available }));
+  const balAt = (x) => { if (!pts.length) return 0; const before = pts.filter((p) => p.x <= x); return (before.length ? before[before.length - 1] : pts[0]).y; };
+  const t0 = dn(todayStr()); const lo = Math.min(t0, ...pts.map((p) => p.x)); const hi = t0 + 45;
+  const marks = s.bills.filter((b) => b.dueDate && b.status !== 'paid').map((b) => ({ x: dn(b.dueDate), b })).filter((m) => m.x >= lo && m.x <= hi).map((m) => ({ x: m.x, y: balAt(m.x), label: `${m.b.company} (${m.b.property})${m.b.amount != null ? ' ' + usd(m.b.amount) : ' · amount unknown'}` }));
+  mk('checking', { type: 'line', data: { datasets: [{ label: 'Checking', data: pts, borderColor: css('--accent'), backgroundColor: css('--accent'), tension: 0.2, pointRadius: 3 },
+    { type: 'scatter', label: 'Bill due', data: marks, pointStyle: 'triangle', pointRadius: 7, backgroundColor: '#ca8a04', borderColor: '#ca8a04' }] },
+    options: { ...base, scales: { x: { type: 'linear', min: lo - 1, max: hi, afterBuildTicks: (ax) => { ax.ticks = []; for (let x = lo; x <= hi; x += 7) ax.ticks.push({ value: x }); }, ticks: { callback: (x) => fmtDate(new Date(x * 864e5).toISOString().slice(0, 10)) } }, y: { ...money, beginAtZero: false } },
+      plugins: { ...base.plugins, tooltip: { callbacks: { title: (c) => fmtDate(new Date(c[0].parsed.x * 864e5).toISOString().slice(0, 10), { weekday: 'short', month: 'short', day: 'numeric' }), label: (c) => c.raw.label || `Checking: ${usd(c.parsed.y)}` } } } } });
+  const rp = Object.entries(s.rentByProp).sort((a, b) => MF.PROPERTIES.indexOf(a[0]) - MF.PROPERTIES.indexOf(b[0]));
+  mk('rent', { type: 'bar', data: { labels: rp.map((x) => x[0]), datasets: [{ label: 'Received', data: rp.map((x) => x[1].received), backgroundColor: '#16a34a' }, { label: 'Expected (lease rent)', data: rp.map((x) => x[1].expected), backgroundColor: '#94a3b8' }] },
+    options: { ...base, scales: { y: money } } });
+}
+const FIN_COLS = [['property', 'Property'], ['company', 'Company'], ['type', 'Type'], ['dueDate', 'Due'], ['cycle', 'Cycle'], ['autopay', 'Autopay'], ['status', 'Status'], ['amount', 'Amount', 'num'], ['monthly', 'Per month', 'num'], ['flags', 'Flags']];
+function finTable(s) {
+  const rows = s.bills.map((b) => ({ ...b, monthly: b.amount == null ? null : b.amount * MF.cycleFactor(b.cycle) }));
+  const { k, dir } = FIN.sort; const val = (r) => (k === 'flags' ? r.flags.join(', ') : r[k]);
+  rows.sort((a, b) => { const x = val(a), y = val(b); const ex = x == null || x === '', ey = y == null || y === ''; if (ex || ey) return ex - ey; return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y))) * dir; });
+  const sortBy = (key) => { FIN.sort = { k: key, dir: FIN.sort.k === key ? -FIN.sort.dir : 1 }; const t = $('#finTable'); if (t) t.replaceWith(finTable(s)); };
+  const cell = (r, key) => { const v = r[key];
+    if (key === 'amount' || key === 'monthly') return h('td', { class: 'num', title: v == null ? 'unknown' : key === 'amount' && r.amountNote ? r.amountNote : null }, usd(v));
+    if (key === 'dueDate') return h('td', { title: v ? null : 'unknown' }, v ? fmtDate(v, { month: 'short', day: 'numeric', year: 'numeric' }) : '');
+    if (key === 'flags') return h('td', null, r.flags.join(', '));
+    if (key === 'type') return h('td', null, BILL_TYPE_LABEL[v] || v);
+    if (key === 'status') return h('td', null, h('span', { class: 'pill', style: { '--pc': BILL_STATUS_COLOR[v] || '#64748b' } }, cap(v)));
+    return h('td', null, v ? (key === 'autopay' || key === 'cycle' ? cap(v) : v) : ''); };
+  return h('section', { class: 'panel fin-table-wrap', id: 'finTable' }, h('h3', null, 'All bills ', h('span', { class: 'count' }, rows.length)),
+    rows.length ? h('div', { class: 'fin-scroll' }, h('table', { class: 'fin-table' }, h('thead', null, h('tr', null, FIN_COLS.map(([key, label, cls]) => h('th', { class: cls || null, 'aria-sort': k === key ? (dir > 0 ? 'ascending' : 'descending') : 'none', scope: 'col' },
+      h('button', { class: 'th-sort', dataset: { sort: key }, onClick: () => sortBy(key) }, label, k === key ? (dir > 0 ? ' ▲' : ' ▼') : ''))))),
+      h('tbody', null, rows.map((r) => h('tr', { class: r.status === 'paid' ? 'paid' : null }, FIN_COLS.map(([key]) => cell(r, key))))),
+      h('tfoot', null, h('tr', null, h('td', { colspan: 7 }, 'Total (known amounts)'), h('td', { class: 'num' }, usd(rows.reduce((t, r) => t + (r.amount || 0), 0))), h('td', { class: 'num' }, usd(rows.reduce((t, r) => t + (r.monthly || 0), 0))), h('td'))))) : h('div', { class: 'empty' }, 'No bills in the finance file.'));
+}
+
 /* ---------------- Timeline ---------------- */
 function renderTimeline(v, items) {
   const withDue = items.filter((i) => i.due); const t0 = todayStr();
@@ -1368,7 +1569,7 @@ function renderGallery(v, items) {
 function renderView() {
   const v = $('#view'); const keep = {}; ['.board', '.grid-wrap', '.tl-wrap', '.gantt-wrap'].forEach((s) => { const el = $(s, v); if (el) keep[s] = [el.scrollLeft, el.scrollTop]; });
   if (!keep['.tl-wrap']) TL_SCROLL.set = false;
-  const wy = scrollY; v.innerHTML = ''; v.setAttribute('aria-labelledby', 'tab-' + UI.view);
+  const wy = scrollY; finDestroyCharts(); v.innerHTML = ''; v.setAttribute('aria-labelledby', 'tab-' + UI.view);
   const items = visibleItems();
   (VIEWS.find((x) => x.id === UI.view) || VIEWS[0]).render(v, items);
   for (const [s, [l, t]] of Object.entries(keep)) { const el = $(s, v); if (el) { el.scrollLeft = l; el.scrollTop = t; if (s === '.tl-wrap') TL_SCROLL.set = true; } }
@@ -1717,7 +1918,7 @@ function applyTheme() {
   const t = getTheme(); const root = document.documentElement; if (t === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
   const b = $('#themeBtn'); if (b) { b.innerHTML = ''; b.append(atIcon(t === 'auto' ? 'auto' : t === 'dark' ? 'moon' : 'sun')); const lbl = { light: 'Light', dark: 'Dark', auto: 'Auto (follows system)' }[t]; b.setAttribute('aria-label', 'Theme: ' + lbl + '. Change theme'); b.title = 'Theme: ' + lbl; b.dataset.theme = t; }
 }
-function setTheme(t) { try { localStorage.setItem(LS.theme, t); } catch {} applyTheme(); if (['dashboard', 'gantt', 'mindmap'].includes(UI.view)) renderView(); }
+function setTheme(t) { try { localStorage.setItem(LS.theme, t); } catch {} applyTheme(); if (['dashboard', 'gantt', 'mindmap', 'finance'].includes(UI.view)) renderView(); }
 function themeMenu(anchor) { const t = getTheme(); openMenu(anchor, [{ title: 'Theme (this device)' }, ...[['light', '☀', 'Light'], ['dark', '☾', 'Dark'], ['auto', '◐', 'Auto — follow system']].map(([k, i, l]) => ({ label: l + (t === k ? ' ✓' : ''), icon: i, onClick: () => setTheme(k) }))]); }
 function addMenu(anchor) {
   openMenu(anchor, [{ label: 'New card', icon: '＋', onClick: () => openCard(null, {}) }, { label: 'Add idea', icon: '💡', onClick: () => quickIdeaDialog() },
@@ -2170,7 +2371,7 @@ function wire() {
   $('#addCardBtn').addEventListener('click', () => openCard(null, {}));
   const am = $('#addMenuBtn'); if (am) am.addEventListener('click', (e) => addMenu(e.currentTarget));
   const tb = $('#themeBtn'); if (tb) { tb.addEventListener('click', () => { const order = ['light', 'dark', 'auto']; setTheme(order[(order.indexOf(getTheme()) + 1) % 3]); toast('Theme: ' + { light: 'Light', dark: 'Dark', auto: 'Auto (system)' }[getTheme()], 1200); }); tb.addEventListener('contextmenu', (e) => { e.preventDefault(); themeMenu(tb); }); }
-  applyTheme(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (getTheme() === 'auto' && WS && ['dashboard', 'gantt', 'mindmap'].includes(UI.view)) renderView(); });
+  applyTheme(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (getTheme() === 'auto' && WS && ['dashboard', 'gantt', 'mindmap', 'finance'].includes(UI.view)) renderView(); });
   addEventListener('resize', debounce(() => { if (WS && isPhone()) renderTabs(); }, 150));
   $('#settingsBtn').addEventListener('click', openSettings);
   $('#manageBtn').addEventListener('click', () => { closeDrawer(); openManage('structure'); });
