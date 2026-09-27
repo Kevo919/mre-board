@@ -113,7 +113,7 @@ function billTileCounts(list) { const out = {}; BILL_TILES.forEach(([k, , fn]) =
 function tileTest(key) { const t = BILL_TILES.find((x) => x[0] === key); return t ? t[2] : () => true; }
 
 /* ---------------- Finance (only ever runs on decrypted, in-memory data) ---------------- */
-/** 1234.5 | '$1,234.50' | '(12.00)' | null → number or null (null = unknown). */
+/** number | currency string (dollar sign, thousands commas, "(x)" = negative) | null → number or null (null = unknown). */
 function parseAmount(v) {
   if (typeof v === 'number') return Number.isFinite(v) ? v : null;
   if (typeof v !== 'string') return null;
